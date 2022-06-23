@@ -11,10 +11,10 @@ class Player {
     this.player = new Image();
     this.player.src = "../images/player.png";
 
-    document.addEventListener("keypress", ({ key }) => {
+    document.addEventListener("keydown", ({ key }) => {
       switch (key) {
         case "w":
-          console.log(this.x / this.width, this.y / this.height - 1);
+          // console.log(this.x / this.width, this.y / this.height - 1);
           if (
             !this.tileMap.checkWallCollision(
               this.x / this.width,
@@ -24,7 +24,7 @@ class Player {
             this.y -= this.height;
             maps[0][this.y / this.height][this.x / this.width] = 3;
             maps[0][this.y / this.height + 1][this.x / this.width] = 2;
-            console.log(maps[0]);
+            // console.log(maps[0]);
           }
           break;
         case "s":
@@ -47,24 +47,48 @@ class Player {
               this.x / this.width - 1,
               this.y / this.height
             )
-          ) {
-            this.x -= this.width;
-            maps[0][this.y / this.height][this.x / this.width] = 3;
-            maps[0][this.y / this.height][this.x / this.width + 1] = 2;
-          }
+          )
+            if (
+              this.tileMap.checkObjectCollision(
+                this.x / this.width - 1,
+                this.y / this.height
+              )
+            ) {
+              this.x -= this.width;
+              maps[0][this.y / this.height][this.x / this.width] = 3;
+              maps[0][this.y / this.height][this.x / this.width + 1] = 2;
+            }
           break;
         case "d":
-          //console.log(this.x / this.width + 1, this.y / this.height);
+          let xPosition = this.y / this.height;
+          let yPosition = this.x / this.width + 1;
           if (
             !this.tileMap.checkWallCollision(
               this.x / this.width + 1,
               this.y / this.height
             )
           ) {
-            this.x += this.width;
-            maps[0][this.y / this.height][this.x / this.width] = 3;
-            maps[0][this.y / this.height][this.x / this.width - 1] = 2;
+            if (
+              this.tileMap.checkObjectCollision(
+                this.x / this.width + 1,
+                this.y / this.height
+              )
+            ) {
+              for (let index = 0; index < balls.length; index++) {
+                if (
+                  xPosition * balls[index].height === balls[index].y &&
+                  yPosition * balls[index].width === balls[index].x
+                ) {
+                  balls[index].x = this.x + this.width * 2;
+                  maps[0][this.y / this.height][this.x / this.width + 1] = 4;
+                }
+              }
+              this.x += this.width;
+              maps[0][this.y / this.height][this.x / this.width] = 3;
+              maps[0][this.y / this.height][this.x / this.width - 1] = 2;
+            }
           }
+          console.log(maps[0]);
           break;
       }
     });

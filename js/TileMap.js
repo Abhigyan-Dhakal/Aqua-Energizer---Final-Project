@@ -118,7 +118,9 @@ class TileMap {
               row * this.tileHeight,
               this.tileWidth,
               this.tileHeight,
-              this
+              this,
+              column,
+              row
             )
           );
           // console.log(row, column);
@@ -135,7 +137,7 @@ class TileMap {
   }
 
   checkWallCollision(yPosition, xPosition) {
-    console.log(maps[0][xPosition][yPosition]);
+    // console.log(maps[0][xPosition][yPosition]);
     if (maps[0][xPosition][yPosition] === 1) {
       return true;
     }
@@ -148,7 +150,27 @@ class TileMap {
     }
   }
 
-  checkObjectCollision(yPosition, xPosition) {}
+  checkObjectCollision(yPosition, xPosition) {
+    if (maps[0][xPosition][yPosition] === 4) {
+      if (maps[0][xPosition][yPosition - 1] === 3) {
+        if (maps[0][xPosition][yPosition + 1] === 2) {
+          return true;
+        } else {
+          return false;
+        }
+      }
+
+      if (maps[0][xPosition][yPosition + 1] === 3) {
+        if (maps[0][xPosition][yPosition - 1] === 2) {
+          return true;
+        } else {
+          return false;
+        }
+      }
+    } else {
+      return true;
+    }
+  }
 
   assignCanvasSize(canvas) {
     canvas.width = maps[0][0].length * this.tileWidth;

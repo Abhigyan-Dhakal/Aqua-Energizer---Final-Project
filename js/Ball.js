@@ -1,10 +1,12 @@
 class Ball {
-  constructor(x, y, width, height, tileMap) {
+  constructor(x, y, width, height, tileMap, column, row) {
     this.x = x;
     this.y = y;
     this.width = width;
     this.height = height;
     this.tileMap = tileMap;
+    this.column = column;
+    this.row = row;
 
     this.ball = new Image();
     this.ball.src = "../images/ball.png";
@@ -17,6 +19,7 @@ class Ball {
   draw(context) {
     // console.log("running");
     context.drawImage(this.ball, this.x, this.y, this.width, this.height);
+    // console.log("bring it on! Ive been drawing");
   }
 
   moveVertically() {
@@ -32,6 +35,6 @@ class Ball {
   }
 
   moveHorizontally() {
-    checkNextPosition;
+    // checkNextPosition;
   }
 }
