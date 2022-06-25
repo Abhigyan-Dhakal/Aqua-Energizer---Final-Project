@@ -15,9 +15,6 @@ function gameLoop() {
   player.draw(context);
 }
 
-console.log(balls);
-
 tileMap.assignCanvasSize(canvas);
 
-// setInterval(gameLoop, 1000 / 60);
 gameLoop();

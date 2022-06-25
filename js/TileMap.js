@@ -47,14 +47,6 @@ class TileMap {
             this.tileHeight
           );
         }
-
-        // this.context.strokeStyle = "yellow";
-        // this.context.strokeRect(
-        //   column * this.tileWidth,
-        //   row * this.tileHeight,
-        //   this.tileWidth,
-        //   this.tileHeight
-        // );
       }
     }
   }
@@ -111,7 +103,6 @@ class TileMap {
       for (let column = 0; column < maps[0][row].length; column++) {
         let tile = maps[0][row][column];
         if (tile === 4) {
-          // console.log("ran");
           balls.push(
             new Ball(
               column * this.tileWidth,
@@ -123,30 +114,27 @@ class TileMap {
               row
             )
           );
-          // console.log(row, column);
-          // return new Ball(
-          //   column * this.tileWidth,
-          //   row * this.tileHeight,
-          //   this.tileWidth,
-          //   this.tileHeight,
-          //   this
-          // );
         }
       }
     }
   }
 
   checkWallCollision(yPosition, xPosition) {
-    // console.log(maps[0][xPosition][yPosition]);
     if (maps[0][xPosition][yPosition] === 1) {
+      collision = true;
       return true;
+    } else {
+      collision = false;
     }
   }
 
   checkPlatform(yPosition, xPosition) {
-    // console.log(yPosition, xPosition);
     if (maps[0][xPosition][yPosition] !== 2) {
+      platform = true;
       return true;
+    } else {
+      platform = false;
+      return false;
     }
   }
 
@@ -154,20 +142,44 @@ class TileMap {
     if (maps[0][xPosition][yPosition] === 4) {
       if (maps[0][xPosition][yPosition - 1] === 3) {
         if (maps[0][xPosition][yPosition + 1] === 2) {
+          collision = false;
           return true;
         } else {
+          collision = true;
           return false;
         }
       }
 
       if (maps[0][xPosition][yPosition + 1] === 3) {
         if (maps[0][xPosition][yPosition - 1] === 2) {
+          collision = false;
           return true;
         } else {
+          collision = true;
+          return false;
+        }
+      }
+
+      if (maps[0][xPosition - 1][yPosition] === 3) {
+        if (maps[0][xPosition + 1][yPosition] === 2) {
+          collision = false;
+          return true;
+        } else {
+          collision = true;
+          return false;
+        }
+      }
+
+      if (maps[0][xPosition + 1][yPosition] === 3) {
+        if (maps[0][xPosition][yPosition] === 4) {
+          collision = true;
+        } else {
+          collision = false;
           return false;
         }
       }
     } else {
+      collision = false;
       return true;
     }
   }

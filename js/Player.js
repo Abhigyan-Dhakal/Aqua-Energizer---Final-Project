@@ -14,81 +14,101 @@ class Player {
     document.addEventListener("keydown", ({ key }) => {
       switch (key) {
         case "w":
-          // console.log(this.x / this.width, this.y / this.height - 1);
           if (
             !this.tileMap.checkWallCollision(
               this.x / this.width,
               this.y / this.height - 1
             )
           ) {
-            this.y -= this.height;
-            maps[0][this.y / this.height][this.x / this.width] = 3;
-            maps[0][this.y / this.height + 1][this.x / this.width] = 2;
-            // console.log(maps[0]);
+            this.tileMap.checkObjectCollision(
+              this.x / this.width,
+              this.y / this.height - 1
+            );
+            if (collision === false) {
+              this.y -= this.height;
+              maps[0][this.y / this.height][this.x / this.width] = 3;
+              maps[0][this.y / this.height + 1][this.x / this.width] = 2;
+            }
           }
           break;
         case "s":
-          // console.log(this.x / this.width, this.y / this.height + 1);
           if (
             !this.tileMap.checkWallCollision(
               this.x / this.width,
               this.y / this.height + 1
             )
           ) {
-            this.y += this.height;
-            maps[0][this.y / this.height][this.x / this.width] = 3;
-            maps[0][this.y / this.height - 1][this.x / this.width] = 2;
+            this.tileMap.checkObjectCollision(
+              this.x / this.width,
+              this.y / this.height + 1
+            );
+            if (collision === false) {
+              this.y += this.height;
+              maps[0][this.y / this.height][this.x / this.width] = 3;
+              maps[0][this.y / this.height - 1][this.x / this.width] = 2;
+            }
           }
           break;
         case "a":
-          //console.log(this.x / this.width - 1, this.y / this.height);
+          let xPositionLeft = this.y / this.height;
+          let yPositionLeft = this.x / this.width - 1;
           if (
             !this.tileMap.checkWallCollision(
               this.x / this.width - 1,
               this.y / this.height
             )
-          )
-            if (
-              this.tileMap.checkObjectCollision(
-                this.x / this.width - 1,
-                this.y / this.height
-              )
-            ) {
+          ) {
+            this.tileMap.checkObjectCollision(
+              this.x / this.width - 1,
+              this.y / this.height
+            );
+            if (collision === false) {
               this.x -= this.width;
               maps[0][this.y / this.height][this.x / this.width] = 3;
               maps[0][this.y / this.height][this.x / this.width + 1] = 2;
+
+              for (let index = 0; index < balls.length; index++) {
+                if (
+                  xPositionLeft * balls[index].height === balls[index].y &&
+                  yPositionLeft * balls[index].width === balls[index].x
+                ) {
+                  balls[index].x = balls[index].x - balls[index].width;
+                  maps[0][this.y / this.height][this.x / this.width - 1] = 4;
+                }
+              }
             }
+          }
+
           break;
         case "d":
-          let xPosition = this.y / this.height;
-          let yPosition = this.x / this.width + 1;
+          let xPositionRight = this.y / this.height;
+          let yPositionRight = this.x / this.width + 1;
           if (
             !this.tileMap.checkWallCollision(
               this.x / this.width + 1,
               this.y / this.height
             )
           ) {
-            if (
-              this.tileMap.checkObjectCollision(
-                this.x / this.width + 1,
-                this.y / this.height
-              )
-            ) {
-              for (let index = 0; index < balls.length; index++) {
-                if (
-                  xPosition * balls[index].height === balls[index].y &&
-                  yPosition * balls[index].width === balls[index].x
-                ) {
-                  balls[index].x = this.x + this.width * 2;
-                  maps[0][this.y / this.height][this.x / this.width + 1] = 4;
-                }
-              }
+            this.tileMap.checkObjectCollision(
+              this.x / this.width + 1,
+              this.y / this.height
+            );
+            if (collision === false) {
               this.x += this.width;
               maps[0][this.y / this.height][this.x / this.width] = 3;
               maps[0][this.y / this.height][this.x / this.width - 1] = 2;
+
+              for (let index = 0; index < balls.length; index++) {
+                if (
+                  xPositionRight * balls[index].height === balls[index].y &&
+                  yPositionRight * balls[index].width === balls[index].x
+                ) {
+                  balls[index].x = balls[index].x + balls[index].width;
+                  maps[0][this.y / this.height][this.x / this.width + 1] = 4;
+                }
+              }
             }
           }
-          console.log(maps[0]);
           break;
       }
     });
