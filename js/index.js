@@ -9,7 +9,7 @@ function gameLoop() {
   tileMap.draw();
 
   for (let index = 0; index < balls.length; index++) {
-    balls[index].draw(context);
+    balls[index].levelingUp === false ? balls[index].draw(context) : "";
   }
 
   player.draw(context);

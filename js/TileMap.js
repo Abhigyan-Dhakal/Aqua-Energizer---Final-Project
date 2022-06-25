@@ -12,6 +12,7 @@ class TileMap {
 
     this.portal = new Image();
     this.portal.src = "../images/portal.png";
+    this.portal.style.zIndex = 1;
   }
 
   draw() {
@@ -111,7 +112,9 @@ class TileMap {
               this.tileHeight,
               this,
               column,
-              row
+              row,
+              false,
+              false
             )
           );
         }
@@ -120,7 +123,10 @@ class TileMap {
   }
 
   checkWallCollision(yPosition, xPosition) {
-    if (maps[0][xPosition][yPosition] === 1) {
+    if (
+      maps[0][xPosition][yPosition] === 1 ||
+      maps[0][xPosition][yPosition] === 5
+    ) {
       collision = true;
       return true;
     } else {
@@ -128,12 +134,18 @@ class TileMap {
     }
   }
 
-  checkPlatform(yPosition, xPosition) {
+  checkPlatform(yPosition, xPosition, impact, ball) {
     if (maps[0][xPosition][yPosition] !== 2) {
-      platform = true;
+      if (maps[0][xPosition][yPosition] === 3 && impact === true) {
+        this.explode();
+      }
+
+      if (maps[0][xPosition][yPosition] === 5) {
+        console.log("pasyo");
+        ball.levelingUp = true;
+      }
       return true;
     } else {
-      platform = false;
       return false;
     }
   }
@@ -143,30 +155,24 @@ class TileMap {
       if (maps[0][xPosition][yPosition - 1] === 3) {
         if (maps[0][xPosition][yPosition + 1] === 2) {
           collision = false;
-          return true;
         } else {
           collision = true;
-          return false;
         }
       }
 
       if (maps[0][xPosition][yPosition + 1] === 3) {
         if (maps[0][xPosition][yPosition - 1] === 2) {
           collision = false;
-          return true;
         } else {
           collision = true;
-          return false;
         }
       }
 
       if (maps[0][xPosition - 1][yPosition] === 3) {
         if (maps[0][xPosition + 1][yPosition] === 2) {
           collision = false;
-          return true;
         } else {
           collision = true;
-          return false;
         }
       }
 
@@ -175,13 +181,16 @@ class TileMap {
           collision = true;
         } else {
           collision = false;
-          return false;
         }
       }
     } else {
       collision = false;
       return true;
     }
+  }
+
+  explode() {
+    console.log("Boom EXPLODED");
   }
 
   assignCanvasSize(canvas) {
