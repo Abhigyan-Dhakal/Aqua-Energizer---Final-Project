@@ -15,6 +15,9 @@ class TileMap {
 
     this.door = new Image();
     this.door.src = "../images/door.png";
+
+    this.concrete = new Image();
+    this.concrete.src = "../images/concrete.png";
   }
 
   draw() {
@@ -60,6 +63,16 @@ class TileMap {
             this.tileHeight
           );
         }
+
+        if (tile === 8) {
+          this.#drawConcrete(
+            this.context,
+            column,
+            row,
+            this.tileWidth,
+            this.tileHeight
+          );
+        }
       }
     }
   }
@@ -82,7 +95,6 @@ class TileMap {
       width,
       height
     );
-    // console.log("drawing sand");
   }
 
   #drawPortal(context, column, row, width, height) {
@@ -98,6 +110,16 @@ class TileMap {
   #drawDoor(context, column, row, width, height) {
     context.drawImage(
       this.door,
+      column * this.tileWidth,
+      row * this.tileHeight,
+      width,
+      height
+    );
+  }
+
+  #drawConcrete(context, column, row, width, height) {
+    context.drawImage(
+      this.concrete,
       column * this.tileWidth,
       row * this.tileHeight,
       width,
@@ -147,10 +169,56 @@ class TileMap {
     }
   }
 
+  getStone() {
+    for (let row = 0; row < maps[0].length; row++) {
+      for (let column = 0; column < maps[0][row].length; column++) {
+        let tile = maps[0][row][column];
+        if (tile === 9) {
+          stones.push(
+            new Stone(
+              column * this.tileWidth,
+              row * this.tileHeight,
+              this.tileWidth,
+              this.tileHeight,
+              this,
+              column,
+              row,
+              false,
+              false
+            )
+          );
+        }
+      }
+    }
+  }
+
+  getKey() {
+    for (let row = 0; row < maps[0].length; row++) {
+      for (let column = 0; column < maps[0][row].length; column++) {
+        let tile = maps[0][row][column];
+        if (tile === 7) {
+          keys.push(
+            new Key(
+              column * this.tileWidth,
+              row * this.tileHeight,
+              this.tileWidth,
+              this.tileHeight,
+              this,
+              false,
+              false
+            )
+          );
+        }
+      }
+    }
+  }
+
   checkWallCollision(yPosition, xPosition) {
     if (
       maps[0][xPosition][yPosition] === 1 ||
-      maps[0][xPosition][yPosition] === 5
+      maps[0][xPosition][yPosition] === 5 ||
+      maps[0][xPosition][yPosition] === 6 ||
+      maps[0][xPosition][yPosition] === 8
     ) {
       collision = true;
       return true;
@@ -160,7 +228,6 @@ class TileMap {
   }
 
   checkPlatform(yPosition, xPosition, impact, ball) {
-    // console.log(ball);
     if (maps[0][xPosition][yPosition] !== 2) {
       if (maps[0][xPosition][yPosition] === 3 && impact === true) {
         this.explodeObjects(yPosition, xPosition, ball);
@@ -176,7 +243,10 @@ class TileMap {
   }
 
   checkObjectCollision(yPosition, xPosition) {
-    if (maps[0][xPosition][yPosition] === 4) {
+    if (
+      maps[0][xPosition][yPosition] === 4 ||
+      maps[0][xPosition][yPosition] === 9
+    ) {
       if (maps[0][xPosition][yPosition - 1] === 3) {
         if (maps[0][xPosition][yPosition + 1] === 2) {
           collision = false;
@@ -194,7 +264,10 @@ class TileMap {
       }
 
       if (maps[0][xPosition - 1][yPosition] === 3) {
-        if (maps[0][xPosition + 1][yPosition] === 2) {
+        if (
+          maps[0][xPosition + 1][yPosition] === 4 &&
+          maps[0][xPosition + 1][yPosition] === 9
+        ) {
           collision = false;
         } else {
           collision = true;
@@ -202,7 +275,10 @@ class TileMap {
       }
 
       if (maps[0][xPosition + 1][yPosition] === 3) {
-        if (maps[0][xPosition][yPosition] === 4) {
+        if (
+          maps[0][xPosition][yPosition] === 4 ||
+          maps[0][xPosition][yPosition] === 9
+        ) {
           collision = true;
         } else {
           collision = false;
@@ -215,7 +291,6 @@ class TileMap {
   }
 
   explodeObjects(yPosition, xPosition) {
-    // console.log(maps[0]);
     let explosionArea = [
       { x: xPosition - 1, y: yPosition - 1 },
       { x: xPosition - 1, y: yPosition },
@@ -229,12 +304,11 @@ class TileMap {
     ];
 
     explosionArea.map((item) => {
-      if (maps[0][item.x][item.y] === 0) {
+      if (maps[0][item.x][item.y] === 0 || maps[0][item.x][item.y] === 8) {
         maps[0][item.x][item.y] = 2;
       }
+
       if (maps[0][item.x][item.y] === 4) {
-        // console.log(item.y * this.tileWidth, item.x * this.tileHeight);
-        // maps[0][item.x][item.y] = 2;
         let explodedballs = balls.filter((ball) => {
           return (
             ball.x === item.y * this.tileWidth &&
@@ -244,16 +318,39 @@ class TileMap {
         explodedballs.map((item) => {
           item.exploded = true;
         });
-        // maps[0][item.x][item.y] = 2;
-        // ball.exploded = true;
       }
+
+      if (maps[0][item.x][item.y] === 9) {
+        let explodedStones = stones.filter((stone) => {
+          return (
+            stone.x === item.y * this.tileWidth &&
+            stone.y === item.x * this.tileHeight
+          );
+        });
+        explodedStones.map((item) => {
+          item.exploded = true;
+        });
+      }
+
       if (maps[0][item.x][item.y] === 3) {
-        console.log(player);
-        console.log(player.exploded);
         player.exploded = true;
-        console.log(player.exploded);
+      }
+
+      if (maps[0][item.x][item.y] === 7) {
+        key.exploded = true;
       }
     });
+  }
+
+  checkKeyPlatform(yPosition, xPosition) {
+    if (
+      maps[0][xPosition][yPosition] === 2 ||
+      maps[0][xPosition][yPosition] === 3
+    ) {
+      return false;
+    } else {
+      return true;
+    }
   }
 
   assignCanvasSize(canvas) {

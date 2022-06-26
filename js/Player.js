@@ -53,6 +53,7 @@ class Player {
         case "a":
           let xPositionLeft = this.y / this.height;
           let yPositionLeft = this.x / this.width - 1;
+          let nextElementLeft = maps[0][xPositionLeft][yPositionLeft];
           if (
             !this.tileMap.checkWallCollision(
               this.x / this.width - 1,
@@ -68,13 +69,27 @@ class Player {
               maps[0][this.y / this.height][this.x / this.width] = 3;
               maps[0][this.y / this.height][this.x / this.width + 1] = 2;
 
-              for (let index = 0; index < balls.length; index++) {
-                if (
-                  xPositionLeft * balls[index].height === balls[index].y &&
-                  yPositionLeft * balls[index].width === balls[index].x
-                ) {
-                  balls[index].x = balls[index].x - balls[index].width;
-                  maps[0][this.y / this.height][this.x / this.width - 1] = 4;
+              if (nextElementLeft === 4) {
+                for (let index = 0; index < balls.length; index++) {
+                  if (
+                    xPositionLeft * balls[index].height === balls[index].y &&
+                    yPositionLeft * balls[index].width === balls[index].x
+                  ) {
+                    balls[index].x = balls[index].x - balls[index].width;
+                    maps[0][this.y / this.height][this.x / this.width - 1] = 4;
+                  }
+                }
+              }
+
+              if (nextElementLeft === 9) {
+                for (let index = 0; index < stones.length; index++) {
+                  if (
+                    xPositionLeft * stones[index].height === stones[index].y &&
+                    yPositionLeft * stones[index].width === stones[index].x
+                  ) {
+                    stones[index].x = stones[index].x - stones[index].width;
+                    maps[0][this.y / this.height][this.x / this.width - 1] = 9;
+                  }
                 }
               }
             }
@@ -84,6 +99,7 @@ class Player {
         case "d":
           let xPositionRight = this.y / this.height;
           let yPositionRight = this.x / this.width + 1;
+          let nextElementRight = maps[0][xPositionRight][yPositionRight];
           if (
             !this.tileMap.checkWallCollision(
               this.x / this.width + 1,
@@ -98,14 +114,27 @@ class Player {
               this.x += this.width;
               maps[0][this.y / this.height][this.x / this.width] = 3;
               maps[0][this.y / this.height][this.x / this.width - 1] = 2;
+              if (nextElementRight === 4) {
+                for (let index = 0; index < balls.length; index++) {
+                  if (
+                    xPositionRight * balls[index].height === balls[index].y &&
+                    yPositionRight * balls[index].width === balls[index].x
+                  ) {
+                    balls[index].x = balls[index].x + balls[index].width;
+                    maps[0][this.y / this.height][this.x / this.width + 1] = 4;
+                  }
+                }
+              }
 
-              for (let index = 0; index < balls.length; index++) {
-                if (
-                  xPositionRight * balls[index].height === balls[index].y &&
-                  yPositionRight * balls[index].width === balls[index].x
-                ) {
-                  balls[index].x = balls[index].x + balls[index].width;
-                  maps[0][this.y / this.height][this.x / this.width + 1] = 4;
+              if (nextElementRight === 9) {
+                for (let index = 0; index < stones.length; index++) {
+                  if (
+                    xPositionRight * stones[index].height === stones[index].y &&
+                    yPositionRight * stones[index].width === stones[index].x
+                  ) {
+                    stones[index].x = stones[index].x + stones[index].width;
+                    maps[0][this.y / this.height][this.x / this.width + 1] = 9;
+                  }
                 }
               }
             }

@@ -28,7 +28,7 @@ class Ball {
 
     setInterval(() => {
       this.moveVertically();
-    }, 200);
+    }, 230);
   }
 
   draw(context) {
@@ -38,6 +38,7 @@ class Ball {
   }
 
   moveVertically() {
+    // console.log(maps[0]);
     if (!this.levelingUp) {
       if (
         !this.tileMap.checkPlatform(
