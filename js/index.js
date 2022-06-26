@@ -1,8 +1,6 @@
 const tileMap = new TileMap(tileHeight, tileWidth, context);
-
 const player = tileMap.getPlayer();
 const ball = tileMap.getBall();
-
 function gameLoop() {
   window.requestAnimationFrame(gameLoop);
   context.clearRect(0, 0, canvas.width, canvas.height);

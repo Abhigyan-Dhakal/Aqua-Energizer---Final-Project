@@ -1,5 +1,16 @@
 class Ball {
-  constructor(x, y, width, height, tileMap, column, row, impact, levelingUp) {
+  constructor(
+    x,
+    y,
+    width,
+    height,
+    tileMap,
+    column,
+    row,
+    impact,
+    levelingUp,
+    exploded
+  ) {
     this.x = x;
     this.y = y;
     this.width = width;
@@ -9,6 +20,7 @@ class Ball {
     this.row = row;
     this.impact = impact;
     this.levelingUp = levelingUp;
+    this.exploded = exploded;
 
     this.ball = new Image();
     this.ball.src = "../images/ball.png";
@@ -20,7 +32,9 @@ class Ball {
   }
 
   draw(context) {
-    context.drawImage(this.ball, this.x, this.y, this.width, this.height);
+    !this.exploded
+      ? context.drawImage(this.ball, this.x, this.y, this.width, this.height)
+      : "";
   }
 
   moveVertically() {
@@ -35,11 +49,16 @@ class Ball {
       ) {
         this.impact = true;
         maps[0][this.y / this.height][this.x / this.width] = 2;
+        maps[0][this.y / this.height + 1][this.x / this.width] = 4;
         this.y = (this.y / this.height + 1) * this.height;
       } else {
         this.impact = false;
         if (maps[0][this.y / this.height + 1][this.x / this.width] !== 5) {
-          maps[0][this.y / this.height][this.x / this.width] = 4;
+          if (this.exploded) {
+            maps[0][this.y / this.height][this.x / this.width] = 2;
+          } else {
+            maps[0][this.y / this.height][this.x / this.width] = 4;
+          }
         } else {
           context.clearRect(this.x, this.y, this.width, this.height);
           maps[0][this.y / this.height][this.x / this.width] = 2;

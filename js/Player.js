@@ -1,5 +1,5 @@
 class Player {
-  constructor(x, y, width, height, tileMap) {
+  constructor(x, y, width, height, tileMap, exploded) {
     this.x = x;
     this.y = y;
     this.width = width;
@@ -7,6 +7,7 @@ class Player {
     this.tileMap = tileMap;
     this.xVelocity = this.x;
     this.yVelocity = this.y;
+    this.exploded = exploded;
 
     this.player = new Image();
     this.player.src = "../images/player.png";
@@ -115,6 +116,10 @@ class Player {
   }
 
   draw(context) {
-    context.drawImage(this.player, this.x, this.y, this.width, this.height);
+    !this.exploded
+      ? context.drawImage(this.player, this.x, this.y, this.width, this.height)
+      : this.gameOver();
   }
+
+  gameOver() {}
 }

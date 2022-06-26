@@ -12,7 +12,9 @@ class TileMap {
 
     this.portal = new Image();
     this.portal.src = "../images/portal.png";
-    this.portal.style.zIndex = 1;
+
+    this.door = new Image();
+    this.door.src = "../images/door.png";
   }
 
   draw() {
@@ -48,6 +50,16 @@ class TileMap {
             this.tileHeight
           );
         }
+
+        if (tile === 6) {
+          this.#drawDoor(
+            this.context,
+            column,
+            row,
+            this.tileWidth,
+            this.tileHeight
+          );
+        }
       }
     }
   }
@@ -70,11 +82,22 @@ class TileMap {
       width,
       height
     );
+    // console.log("drawing sand");
   }
 
   #drawPortal(context, column, row, width, height) {
     context.drawImage(
       this.portal,
+      column * this.tileWidth,
+      row * this.tileHeight,
+      width,
+      height
+    );
+  }
+
+  #drawDoor(context, column, row, width, height) {
+    context.drawImage(
+      this.door,
       column * this.tileWidth,
       row * this.tileHeight,
       width,
@@ -92,7 +115,8 @@ class TileMap {
             row * this.tileHeight,
             this.tileWidth,
             this.tileHeight,
-            this
+            this,
+            false
           );
         }
       }
@@ -113,6 +137,7 @@ class TileMap {
               this,
               column,
               row,
+              false,
               false,
               false
             )
@@ -135,13 +160,13 @@ class TileMap {
   }
 
   checkPlatform(yPosition, xPosition, impact, ball) {
+    // console.log(ball);
     if (maps[0][xPosition][yPosition] !== 2) {
       if (maps[0][xPosition][yPosition] === 3 && impact === true) {
-        this.explode();
+        this.explodeObjects(yPosition, xPosition, ball);
       }
 
       if (maps[0][xPosition][yPosition] === 5) {
-        console.log("pasyo");
         ball.levelingUp = true;
       }
       return true;
@@ -189,8 +214,46 @@ class TileMap {
     }
   }
 
-  explode() {
-    console.log("Boom EXPLODED");
+  explodeObjects(yPosition, xPosition) {
+    // console.log(maps[0]);
+    let explosionArea = [
+      { x: xPosition - 1, y: yPosition - 1 },
+      { x: xPosition - 1, y: yPosition },
+      { x: xPosition - 1, y: yPosition + 1 },
+      { x: xPosition, y: yPosition - 1 },
+      { x: xPosition, y: yPosition },
+      { x: xPosition, y: yPosition + 1 },
+      { x: xPosition + 1, y: yPosition - 1 },
+      { x: xPosition + 1, y: yPosition },
+      { x: xPosition + 1, y: yPosition + 1 },
+    ];
+
+    explosionArea.map((item) => {
+      if (maps[0][item.x][item.y] === 0) {
+        maps[0][item.x][item.y] = 2;
+      }
+      if (maps[0][item.x][item.y] === 4) {
+        // console.log(item.y * this.tileWidth, item.x * this.tileHeight);
+        // maps[0][item.x][item.y] = 2;
+        let explodedballs = balls.filter((ball) => {
+          return (
+            ball.x === item.y * this.tileWidth &&
+            ball.y === item.x * this.tileHeight
+          );
+        });
+        explodedballs.map((item) => {
+          item.exploded = true;
+        });
+        // maps[0][item.x][item.y] = 2;
+        // ball.exploded = true;
+      }
+      if (maps[0][item.x][item.y] === 3) {
+        console.log(player);
+        console.log(player.exploded);
+        player.exploded = true;
+        console.log(player.exploded);
+      }
+    });
   }
 
   assignCanvasSize(canvas) {
