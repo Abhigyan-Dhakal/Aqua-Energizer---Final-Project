@@ -38,7 +38,6 @@ class Ball {
   }
 
   moveVertically() {
-    // console.log(maps[0]);
     if (!this.levelingUp) {
       if (
         !this.tileMap.checkPlatform(

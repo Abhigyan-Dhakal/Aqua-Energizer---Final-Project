@@ -213,6 +213,61 @@ class TileMap {
     }
   }
 
+  getCrab() {
+    for (let row = 0; row < maps[0].length; row++) {
+      for (let column = 0; column < maps[0][row].length; column++) {
+        let tile = maps[0][row][column];
+        if (tile === 10) {
+          crabs.push(
+            new Crab(
+              column * this.tileWidth,
+              row * this.tileHeight,
+              this.tileWidth,
+              this.tileHeight,
+              this,
+              false
+            )
+          );
+        }
+      }
+    }
+  }
+
+  getShark() {
+    for (let row = 0; row < maps[0].length; row++) {
+      for (let column = 0; column < maps[0][row].length; column++) {
+        let tile = maps[0][row][column];
+        if (tile === 11) {
+          sharks.push(
+            new Shark(
+              column * this.tileWidth,
+              row * this.tileHeight,
+              this.tileWidth,
+              this.tileHeight,
+              this,
+              false,
+              true
+            )
+          );
+        }
+
+        if (tile === 12) {
+          sharks.push(
+            new Shark(
+              column * this.tileWidth,
+              row * this.tileHeight,
+              this.tileWidth,
+              this.tileHeight,
+              this,
+              false,
+              false
+            )
+          );
+        }
+      }
+    }
+  }
+
   checkWallCollision(yPosition, xPosition) {
     if (
       maps[0][xPosition][yPosition] === 1 ||
@@ -229,7 +284,13 @@ class TileMap {
 
   checkPlatform(yPosition, xPosition, impact, ball) {
     if (maps[0][xPosition][yPosition] !== 2) {
-      if (maps[0][xPosition][yPosition] === 3 && impact === true) {
+      if (
+        (maps[0][xPosition][yPosition] === 3 ||
+          maps[0][xPosition][yPosition] === 10 ||
+          maps[0][xPosition][yPosition] === 11 ||
+          maps[0][xPosition][yPosition] === 12) &&
+        impact === true
+      ) {
         this.explodeObjects(yPosition, xPosition, ball);
       }
 
@@ -339,6 +400,30 @@ class TileMap {
       if (maps[0][item.x][item.y] === 7) {
         key.exploded = true;
       }
+
+      if (maps[0][item.x][item.y] === 10) {
+        let explodedCrab = crabs.filter((crab) => {
+          return (
+            crab.x === item.y * this.tileWidth &&
+            crab.y === item.x * this.tileHeight
+          );
+        });
+        explodedCrab.map((item) => {
+          item.exploded = true;
+        });
+      }
+
+      if (maps[0][item.x][item.y] === 11 || maps[0][item.x][item.y] === 12) {
+        let explodedShark = sharks.filter((shark) => {
+          return (
+            shark.x === item.y * this.tileWidth &&
+            shark.y === item.x * this.tileHeight
+          );
+        });
+        explodedShark.map((item) => {
+          item.exploded = true;
+        });
+      }
     });
   }
 
@@ -353,8 +438,16 @@ class TileMap {
     }
   }
 
+  checkSharkCollision(yPosition, xPosition) {
+    if (maps[0][yPosition][xPosition] !== 2) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   assignCanvasSize(canvas) {
     canvas.width = maps[0][0].length * this.tileWidth;
-    canvas.height = maps[0].length * this.tileHeight;
+    canvas.height = maps[0].length * this.tileHeight + this.tileHeight;
   }
 }

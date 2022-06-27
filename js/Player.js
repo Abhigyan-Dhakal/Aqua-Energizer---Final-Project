@@ -150,5 +150,7 @@ class Player {
       : this.gameOver();
   }
 
-  gameOver() {}
+  gameOver() {
+    console.log("Game Over");
+  }
 }
