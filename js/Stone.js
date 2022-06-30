@@ -11,18 +11,17 @@ class Stone {
     this.exploded = exploded;
 
     this.stone = new Image();
-    this.stone.src = "../images/stone.png";
-    this.stone.style.zIndex = -1;
+    this.stone.src = STONE_IMG;
 
     setInterval(() => {
       this.moveVertically();
-    }, 230);
+    }, STONE_GRAVITY);
   }
 
   draw(context) {
     !this.exploded
       ? context.drawImage(this.stone, this.x, this.y, this.width, this.height)
-      : "";
+      : null;
   }
 
   moveVertically() {
@@ -35,15 +34,15 @@ class Stone {
       )
     ) {
       this.impact = true;
-      maps[0][this.y / this.height][this.x / this.width] = 2;
-      maps[0][this.y / this.height + 1][this.x / this.width] = 9;
+      activeLevel[this.y / this.height][this.x / this.width] = EMPTY_ID;
+      activeLevel[this.y / this.height + 1][this.x / this.width] = STONE_ID;
       this.y = (this.y / this.height + 1) * this.height;
     } else {
       this.impact = false;
       if (this.exploded) {
-        maps[0][this.y / this.height][this.x / this.width] = 2;
+        activeLevel[this.y / this.height][this.x / this.width] = EMPTY_ID;
       } else {
-        maps[0][this.y / this.height][this.x / this.width] = 9;
+        activeLevel[this.y / this.height][this.x / this.width] = STONE_ID;
       }
     }
   }

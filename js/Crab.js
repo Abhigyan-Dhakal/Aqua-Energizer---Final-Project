@@ -8,53 +8,57 @@ class Crab {
     this.exploded = exploded;
 
     this.crab = new Image();
-    this.crab.src = "../images/crab.png";
+    this.crab.src = CRAB_IMG;
 
     setInterval(() => {
       !this.exploded ? this.move() : null;
-    }, 380);
+    }, CRAB_SPEED);
   }
 
   draw(context) {
     !this.exploded
       ? context.drawImage(this.crab, this.x, this.y, this.width, this.height)
-      : (maps[0][this.y / this.height][this.x / this.width] = 2);
+      : (activeLevel[this.y / this.height][this.x / this.width] = 2);
   }
 
   move() {
     if (
       (player.y / player.height > this.y / this.height &&
-        maps[0][this.y / this.height + 1][this.x / this.width] === 2) ||
-      maps[0][this.y / this.height + 1][this.x / this.width] === 3
+        activeLevel[this.y / this.height + 1][this.x / this.width] ===
+          EMPTY_ID) ||
+      activeLevel[this.y / this.height + 1][this.x / this.width] === PLAYER_ID
     ) {
       this.y += this.height;
-      maps[0][this.y / this.height - 1][this.x / this.width] = 2;
+      activeLevel[this.y / this.height - 1][this.x / this.width] = EMPTY_ID;
     } else if (
       (player.y / player.height < this.y / this.height &&
-        maps[0][this.y / this.height - 1][this.x / this.width] === 2) ||
-      maps[0][this.y / this.height - 1][this.x / this.width] === 3
+        activeLevel[this.y / this.height - 1][this.x / this.width] ===
+          EMPTY_ID) ||
+      activeLevel[this.y / this.height - 1][this.x / this.width] === PLAYER_ID
     ) {
       this.y -= this.height;
-      maps[0][this.y / this.height + 1][this.x / this.width] = 2;
+      activeLevel[this.y / this.height + 1][this.x / this.width] = EMPTY_ID;
     } else if (
       (player.x / player.width < this.x / this.width &&
-        maps[0][this.y / this.height][this.x / this.width - 1] === 2) ||
-      maps[0][this.y / this.height][this.x / this.width - 1] === 3
+        activeLevel[this.y / this.height][this.x / this.width - 1] ===
+          EMPTY_ID) ||
+      activeLevel[this.y / this.height][this.x / this.width - 1] === PLAYER_ID
     ) {
       this.x -= this.width;
-      maps[0][this.y / this.height][this.x / this.width + 1] = 2;
+      activeLevel[this.y / this.height][this.x / this.width + 1] = EMPTY_ID;
     } else if (
       (player.x / player.width > this.x / this.width &&
-        maps[0][this.y / this.height][this.x / this.width + 1] === 2) ||
-      maps[0][this.y / this.height][this.x / this.width + 1] === 3
+        activeLevel[this.y / this.height][this.x / this.width + 1] ===
+          EMPTY_ID) ||
+      activeLevel[this.y / this.height][this.x / this.width + 1] === PLAYER_ID
     ) {
       this.x += this.width;
-      maps[0][this.y / this.height][this.x / this.width - 1] = 2;
+      activeLevel[this.y / this.height][this.x / this.width - 1] = EMPTY_ID;
     }
 
     this.exploded
-      ? (maps[0][this.y / this.height][this.x / this.width] = 2)
-      : (maps[0][this.y / this.height][this.x / this.width] = 10);
+      ? (activeLevel[this.y / this.height][this.x / this.width] = EMPTY_ID)
+      : (activeLevel[this.y / this.height][this.x / this.width] = CRAB_ID);
 
     player.x === this.x && player.y === this.y
       ? (player.exploded = true)

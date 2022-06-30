@@ -4,28 +4,47 @@ class TileMap {
     this.tileWidth = tileWidth;
     this.context = context;
 
+    // Creating image objects and assigning source for game items
     this.sand = new Image();
-    this.sand.src = "../images/sand.png";
+    this.sand.src = SAND_IMG;
 
     this.wall = new Image();
-    this.wall.src = "../images/wall.png";
+    this.wall.src = WALL_IMG;
 
     this.portal = new Image();
-    this.portal.src = "../images/portal.png";
+    this.portal.src = PORTAL_IMG;
 
     this.door = new Image();
-    this.door.src = "../images/door.png";
+    this.door.src = DOOR_IMG;
 
     this.concrete = new Image();
-    this.concrete.src = "../images/concrete.png";
+    this.concrete.src = CONCRETE_IMG;
+
+    this.info = new Image();
+
+    this.deductOxygen();
   }
 
   draw() {
-    for (let row = 0; row < maps[0].length; row++) {
-      for (let column = 0; column < maps[0][row].length; column++) {
-        let tile = maps[0][row][column];
+    this.context.globalCompositeOperation = "destination-over";
+    this.checkOxygen();
+    this.drawInfo();
 
-        if (tile === 0) {
+    this.context.drawImage(
+      this.info,
+      0 * this.tileWidth,
+      ROW_LENGTH * this.tileHeight,
+      COL_LENGTH * this.tileWidth,
+      this.tileHeight
+    );
+    this.info.src = "../images/level-info.png";
+
+    // For loop to iterate through map (2D-array) and call draw function for respective item-id
+    for (let row = 0; row < activeLevel.length; row++) {
+      for (let column = 0; column < activeLevel[row].length; column++) {
+        let tile = activeLevel[row][column];
+
+        if (tile === SAND_ID) {
           this.#drawSand(
             this.context,
             column,
@@ -34,7 +53,7 @@ class TileMap {
             this.tileHeight
           );
         }
-        if (tile === 1) {
+        if (tile === WALL_ID) {
           this.#drawWall(
             this.context,
             column,
@@ -44,7 +63,7 @@ class TileMap {
           );
         }
 
-        if (tile === 5) {
+        if (tile === PORTAL_ID) {
           this.#drawPortal(
             this.context,
             column,
@@ -54,7 +73,7 @@ class TileMap {
           );
         }
 
-        if (tile === 6) {
+        if (tile === DOOR_ID) {
           this.#drawDoor(
             this.context,
             column,
@@ -64,7 +83,7 @@ class TileMap {
           );
         }
 
-        if (tile === 8) {
+        if (tile === CONCRETE_ID) {
           this.#drawConcrete(
             this.context,
             column,
@@ -77,6 +96,7 @@ class TileMap {
     }
   }
 
+  // Private functions to draw images on the respective tile based on the coordinates in 2D-array
   #drawWall(context, column, row, width, height) {
     context.drawImage(
       this.wall,
@@ -127,11 +147,12 @@ class TileMap {
     );
   }
 
+  // Function to create new player object on map
   getPlayer() {
-    for (let row = 0; row < maps[0].length; row++) {
-      for (let column = 0; column < maps[0][row].length; column++) {
-        let tile = maps[0][row][column];
-        if (tile === 3) {
+    for (let row = 0; row < activeLevel.length; row++) {
+      for (let column = 0; column < activeLevel[row].length; column++) {
+        let tile = activeLevel[row][column];
+        if (tile === PLAYER_ID) {
           return new Player(
             column * this.tileWidth,
             row * this.tileHeight,
@@ -145,11 +166,12 @@ class TileMap {
     }
   }
 
+  // Function to create ball objects and push each ball in an array
   getBall() {
-    for (let row = 0; row < maps[0].length; row++) {
-      for (let column = 0; column < maps[0][row].length; column++) {
-        let tile = maps[0][row][column];
-        if (tile === 4) {
+    for (let row = 0; row < activeLevel.length; row++) {
+      for (let column = 0; column < activeLevel[row].length; column++) {
+        let tile = activeLevel[row][column];
+        if (tile === BALL_ID) {
           balls.push(
             new Ball(
               column * this.tileWidth,
@@ -169,11 +191,12 @@ class TileMap {
     }
   }
 
+  // Function to create stone objects and push each stone in an array
   getStone() {
-    for (let row = 0; row < maps[0].length; row++) {
-      for (let column = 0; column < maps[0][row].length; column++) {
-        let tile = maps[0][row][column];
-        if (tile === 9) {
+    for (let row = 0; row < activeLevel.length; row++) {
+      for (let column = 0; column < activeLevel[row].length; column++) {
+        let tile = activeLevel[row][column];
+        if (tile === STONE_ID) {
           stones.push(
             new Stone(
               column * this.tileWidth,
@@ -192,11 +215,12 @@ class TileMap {
     }
   }
 
+  // Function to create key object and push it in an array
   getKey() {
-    for (let row = 0; row < maps[0].length; row++) {
-      for (let column = 0; column < maps[0][row].length; column++) {
-        let tile = maps[0][row][column];
-        if (tile === 7) {
+    for (let row = 0; row < activeLevel.length; row++) {
+      for (let column = 0; column < activeLevel[row].length; column++) {
+        let tile = activeLevel[row][column];
+        if (tile === KEY_ID) {
           keys.push(
             new Key(
               column * this.tileWidth,
@@ -213,11 +237,12 @@ class TileMap {
     }
   }
 
+  // Function to create crab objects and push each crab in an array
   getCrab() {
-    for (let row = 0; row < maps[0].length; row++) {
-      for (let column = 0; column < maps[0][row].length; column++) {
-        let tile = maps[0][row][column];
-        if (tile === 10) {
+    for (let row = 0; row < activeLevel.length; row++) {
+      for (let column = 0; column < activeLevel[row].length; column++) {
+        let tile = activeLevel[row][column];
+        if (tile === CRAB_ID) {
           crabs.push(
             new Crab(
               column * this.tileWidth,
@@ -233,11 +258,13 @@ class TileMap {
     }
   }
 
+  // Function to create shark objects and push each shark in an array
   getShark() {
-    for (let row = 0; row < maps[0].length; row++) {
-      for (let column = 0; column < maps[0][row].length; column++) {
-        let tile = maps[0][row][column];
-        if (tile === 11) {
+    for (let row = 0; row < activeLevel.length; row++) {
+      for (let column = 0; column < activeLevel[row].length; column++) {
+        let tile = activeLevel[row][column];
+        // Create object of vertically moving shark
+        if (tile === SHARK_UP_ID) {
           sharks.push(
             new Shark(
               column * this.tileWidth,
@@ -251,7 +278,8 @@ class TileMap {
           );
         }
 
-        if (tile === 12) {
+        // Create object of horizontally moving shark
+        if (tile === SHARK_RIGHT_ID) {
           sharks.push(
             new Shark(
               column * this.tileWidth,
@@ -268,12 +296,13 @@ class TileMap {
     }
   }
 
+  // Function to check wall collision of game elements
   checkWallCollision(yPosition, xPosition) {
     if (
-      maps[0][xPosition][yPosition] === 1 ||
-      maps[0][xPosition][yPosition] === 5 ||
-      maps[0][xPosition][yPosition] === 6 ||
-      maps[0][xPosition][yPosition] === 8
+      activeLevel[xPosition][yPosition] === WALL_ID ||
+      activeLevel[xPosition][yPosition] === PORTAL_ID ||
+      activeLevel[xPosition][yPosition] === DOOR_ID ||
+      activeLevel[xPosition][yPosition] === CONCRETE_ID
     ) {
       collision = true;
       return true;
@@ -282,19 +311,22 @@ class TileMap {
     }
   }
 
+  // Function to check the platform the game objects are lying over
   checkPlatform(yPosition, xPosition, impact, ball) {
-    if (maps[0][xPosition][yPosition] !== 2) {
+    // Call explode function if falling object has impact set to true and collides with enemy/player
+    if (activeLevel[xPosition][yPosition] !== EMPTY_ID) {
       if (
-        (maps[0][xPosition][yPosition] === 3 ||
-          maps[0][xPosition][yPosition] === 10 ||
-          maps[0][xPosition][yPosition] === 11 ||
-          maps[0][xPosition][yPosition] === 12) &&
+        (activeLevel[xPosition][yPosition] === PLAYER_ID ||
+          activeLevel[xPosition][yPosition] === CRAB_ID ||
+          activeLevel[xPosition][yPosition] === SHARK_UP_ID ||
+          activeLevel[xPosition][yPosition] === SHARK_RIGHT_ID) &&
         impact === true
       ) {
         this.explodeObjects(yPosition, xPosition, ball);
       }
 
-      if (maps[0][xPosition][yPosition] === 5) {
+      // Set leveling up status to true if platform is portal
+      if (activeLevel[xPosition][yPosition] === PORTAL_ID) {
         ball.levelingUp = true;
       }
       return true;
@@ -303,31 +335,34 @@ class TileMap {
     }
   }
 
+  // Function to check the collision of game objects in the map
   checkObjectCollision(yPosition, xPosition) {
     if (
-      maps[0][xPosition][yPosition] === 4 ||
-      maps[0][xPosition][yPosition] === 9
+      activeLevel[xPosition][yPosition] === BALL_ID ||
+      activeLevel[xPosition][yPosition] === STONE_ID
     ) {
-      if (maps[0][xPosition][yPosition - 1] === 3) {
-        if (maps[0][xPosition][yPosition + 1] === 2) {
+      // Set the collision to false if no game element is present in next tile else false
+      if (activeLevel[xPosition][yPosition - 1] === PLAYER_ID) {
+        if (activeLevel[xPosition][yPosition + 1] === EMPTY_ID) {
           collision = false;
         } else {
           collision = true;
         }
       }
 
-      if (maps[0][xPosition][yPosition + 1] === 3) {
-        if (maps[0][xPosition][yPosition - 1] === 2) {
+      if (activeLevel[xPosition][yPosition + 1] === PLAYER_ID) {
+        if (activeLevel[xPosition][yPosition - 1] === EMPTY_ID) {
           collision = false;
         } else {
           collision = true;
         }
       }
 
-      if (maps[0][xPosition - 1][yPosition] === 3) {
+      // Condition to identify the collision of player ball and stone
+      if (activeLevel[xPosition - 1][yPosition] === PLAYER_ID) {
         if (
-          maps[0][xPosition + 1][yPosition] === 4 &&
-          maps[0][xPosition + 1][yPosition] === 9
+          activeLevel[xPosition + 1][yPosition] === BALL_ID &&
+          activeLevel[xPosition + 1][yPosition] === STONE_ID
         ) {
           collision = false;
         } else {
@@ -335,10 +370,10 @@ class TileMap {
         }
       }
 
-      if (maps[0][xPosition + 1][yPosition] === 3) {
+      if (activeLevel[xPosition + 1][yPosition] === PLAYER_ID) {
         if (
-          maps[0][xPosition][yPosition] === 4 ||
-          maps[0][xPosition][yPosition] === 9
+          activeLevel[xPosition][yPosition] === BALL_ID ||
+          activeLevel[xPosition][yPosition] === STONE_ID
         ) {
           collision = true;
         } else {
@@ -351,7 +386,9 @@ class TileMap {
     }
   }
 
+  // Function to create explosion on 3x3 tile from point of impact
   explodeObjects(yPosition, xPosition) {
+    // Coordinates of the tiles to be exploded
     let explosionArea = [
       { x: xPosition - 1, y: yPosition - 1 },
       { x: xPosition - 1, y: yPosition },
@@ -364,12 +401,17 @@ class TileMap {
       { x: xPosition + 1, y: yPosition + 1 },
     ];
 
+    // Map through explosion coordinates to remove game objects/elements in the coordinate
     explosionArea.map((item) => {
-      if (maps[0][item.x][item.y] === 0 || maps[0][item.x][item.y] === 8) {
-        maps[0][item.x][item.y] = 2;
+      if (
+        activeLevel[item.x][item.y] === SAND_ID ||
+        activeLevel[item.x][item.y] === CONCRETE_ID
+      ) {
+        activeLevel[item.x][item.y] = EMPTY_ID;
       }
 
-      if (maps[0][item.x][item.y] === 4) {
+      // Set exploded property of ball to true
+      if (activeLevel[item.x][item.y] === BALL_ID) {
         let explodedballs = balls.filter((ball) => {
           return (
             ball.x === item.y * this.tileWidth &&
@@ -381,7 +423,8 @@ class TileMap {
         });
       }
 
-      if (maps[0][item.x][item.y] === 9) {
+      // Set exploded property of Stone to true
+      if (activeLevel[item.x][item.y] === STONE_ID) {
         let explodedStones = stones.filter((stone) => {
           return (
             stone.x === item.y * this.tileWidth &&
@@ -393,15 +436,18 @@ class TileMap {
         });
       }
 
-      if (maps[0][item.x][item.y] === 3) {
+      // Set exploded property of player to true
+      if (activeLevel[item.x][item.y] === PLAYER_ID) {
         player.exploded = true;
       }
 
-      if (maps[0][item.x][item.y] === 7) {
+      // Set exploded property of key to true
+      if (activeLevel[item.x][item.y] === KEY_ID) {
         key.exploded = true;
       }
 
-      if (maps[0][item.x][item.y] === 10) {
+      // Set exploded property of crabs to true
+      if (activeLevel[item.x][item.y] === CRAB_ID) {
         let explodedCrab = crabs.filter((crab) => {
           return (
             crab.x === item.y * this.tileWidth &&
@@ -413,7 +459,11 @@ class TileMap {
         });
       }
 
-      if (maps[0][item.x][item.y] === 11 || maps[0][item.x][item.y] === 12) {
+      // Set exploded property of sharks to true
+      if (
+        activeLevel[item.x][item.y] === SHARK_UP_ID ||
+        activeLevel[item.x][item.y] === SHARK_RIGHT_ID
+      ) {
         let explodedShark = sharks.filter((shark) => {
           return (
             shark.x === item.y * this.tileWidth &&
@@ -427,10 +477,12 @@ class TileMap {
     });
   }
 
+  // Function to check the platform of key
   checkKeyPlatform(yPosition, xPosition) {
+    // Set platform to false if tile below key is player/empty
     if (
-      maps[0][xPosition][yPosition] === 2 ||
-      maps[0][xPosition][yPosition] === 3
+      activeLevel[xPosition][yPosition] === EMPTY_ID ||
+      activeLevel[xPosition][yPosition] === PLAYER_ID
     ) {
       return false;
     } else {
@@ -439,15 +491,59 @@ class TileMap {
   }
 
   checkSharkCollision(yPosition, xPosition) {
-    if (maps[0][yPosition][xPosition] !== 2) {
+    if (
+      activeLevel[yPosition][xPosition] !== EMPTY_ID &&
+      activeLevel[yPosition][xPosition] !== PLAYER_ID
+    ) {
       return true;
     } else {
       return false;
     }
   }
 
+  // Function to draw the game information/details
+  drawInfo() {
+    // Label for current level
+    this.context.font = "18px Arial";
+    this.context.fillText(levelId + 1, LEVEL_INFO_POS_X, INFO_POS_Y);
+    this.context.fillStyle = "white";
+
+    // Label for Score
+    this.context.font = "18px Arial";
+    this.context.fillText(levelId * SCORE_MUL, SCORE_INFO_POS_X, INFO_POS_Y);
+    this.context.fillStyle = "white";
+
+    // Label for left energy balls
+    this.context.font = "18px Arial";
+    this.context.fillText(`${balls.length} left`, BALL_INFO_POS_X, INFO_POS_Y);
+    this.context.fillStyle = "white";
+
+    // Label for oxygen count
+    this.context.font = "18px Arial";
+    this.context.fillText(oxygen, OXYGEN_INFO_POS_X, INFO_POS_Y);
+    this.context.fillStyle = "white";
+
+    // Label for player lives
+    this.context.font = "18px Arial";
+    this.context.fillText(lives, LIVES_INFO_POS_X, INFO_POS_Y);
+    this.context.fillStyle = "white";
+  }
+
+  // Function to deduct oxygen count every second i.e. 1000ms
+  deductOxygen() {
+    setInterval(() => {
+      oxygen -= 1;
+    }, 1000);
+  }
+
+  // Function to explode player if oxygen count equals to 0
+  checkOxygen() {
+    oxygen === 0 ? (player.exploded = true) : null;
+  }
+
+  // Function to assign canvas size for the tileMap object
   assignCanvasSize(canvas) {
-    canvas.width = maps[0][0].length * this.tileWidth;
-    canvas.height = maps[0].length * this.tileHeight + this.tileHeight;
+    canvas.width = activeLevel[0].length * this.tileWidth;
+    canvas.height = activeLevel.length * this.tileHeight + this.tileHeight;
   }
 }

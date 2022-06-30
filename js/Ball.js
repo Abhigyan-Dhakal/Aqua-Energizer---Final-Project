@@ -11,6 +11,7 @@ class Ball {
     levelingUp,
     exploded
   ) {
+    // Assign class parameters to the object's property
     this.x = x;
     this.y = y;
     this.width = width;
@@ -22,19 +23,20 @@ class Ball {
     this.levelingUp = levelingUp;
     this.exploded = exploded;
 
+    // Creating image object and assigning source for ball
     this.ball = new Image();
-    this.ball.src = "../images/ball.png";
-    this.ball.style.zIndex = -1;
+    this.ball.src = BALL_IMG;
 
+    // Set interval to move the ball vertically
     setInterval(() => {
       this.moveVertically();
-    }, 230);
+    }, BALL_GRAVITY);
   }
 
   draw(context) {
     !this.exploded
       ? context.drawImage(this.ball, this.x, this.y, this.width, this.height)
-      : "";
+      : null;
   }
 
   moveVertically() {
@@ -47,33 +49,58 @@ class Ball {
           this
         )
       ) {
+        // Set impact to true if no platform
         this.impact = true;
-        maps[0][this.y / this.height][this.x / this.width] = 2;
-        maps[0][this.y / this.height + 1][this.x / this.width] = 4;
+        activeLevel[this.y / this.height][this.x / this.width] = EMPTY_ID;
+        activeLevel[this.y / this.height + 1][this.x / this.width] = BALL_ID;
         this.y = (this.y / this.height + 1) * this.height;
       } else {
+        // Set impact to false on finding any platform
         this.impact = false;
-        if (maps[0][this.y / this.height + 1][this.x / this.width] !== 5) {
+        if (activeLevel[this.y / this.height + 1][this.x / this.width] !== 5) {
           if (this.exploded) {
-            maps[0][this.y / this.height][this.x / this.width] = 2;
+            activeLevel[this.y / this.height][this.x / this.width] = EMPTY_ID;
           } else {
-            maps[0][this.y / this.height][this.x / this.width] = 4;
+            activeLevel[this.y / this.height][this.x / this.width] = BALL_ID;
           }
         } else {
+          // Undraw image on levelling up and filter out the ball object from the array
           context.clearRect(this.x, this.y, this.width, this.height);
-          maps[0][this.y / this.height][this.x / this.width] = 2;
+          activeLevel[this.y / this.height][this.x / this.width] = EMPTY_ID;
           balls = balls.filter((item) => {
             return item.x !== this.x && item.y !== this.y;
           });
-          this.checkLevelUp();
         }
       }
     }
+    this.checkLevelUp();
   }
 
   checkLevelUp() {
+    for (let row = 0; row < activeLevel.length; row++) {
+      for (let column = 0; column < activeLevel[row].length; column++) {
+        let tile = activeLevel[row][column];
+        if (tile === PORTAL_ID) {
+          portalCoordinate = [column, row];
+        }
+      }
+    }
+
+    console.log(portalCoordinate);
+
     if (balls.length === 0) {
-      console.log("Level Up");
+      if (
+        activeLevel[portalCoordinate[1] - 1][portalCoordinate[0]] === PLAYER_ID
+      ) {
+        levelId++;
+        let gameData = {
+          levelId: levelId,
+          lives: lives,
+          state: 2,
+        };
+        localStorage.setItem("gameData", JSON.stringify(gameData));
+        window.location.reload(false);
+      }
     }
   }
 }

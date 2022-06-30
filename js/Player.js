@@ -8,9 +8,10 @@ class Player {
     this.xVelocity = this.x;
     this.yVelocity = this.y;
     this.exploded = exploded;
+    this.minimized = false;
 
     this.player = new Image();
-    this.player.src = "../images/player.png";
+    this.player.src = PLAYER_IMG;
 
     document.addEventListener("keydown", ({ key }) => {
       switch (key) {
@@ -27,8 +28,10 @@ class Player {
             );
             if (collision === false) {
               this.y -= this.height;
-              maps[0][this.y / this.height][this.x / this.width] = 3;
-              maps[0][this.y / this.height + 1][this.x / this.width] = 2;
+              activeLevel[this.y / this.height][this.x / this.width] =
+                PLAYER_ID;
+              activeLevel[this.y / this.height + 1][this.x / this.width] =
+                EMPTY_ID;
             }
           }
           break;
@@ -45,15 +48,17 @@ class Player {
             );
             if (collision === false) {
               this.y += this.height;
-              maps[0][this.y / this.height][this.x / this.width] = 3;
-              maps[0][this.y / this.height - 1][this.x / this.width] = 2;
+              activeLevel[this.y / this.height][this.x / this.width] =
+                PLAYER_ID;
+              activeLevel[this.y / this.height - 1][this.x / this.width] =
+                EMPTY_ID;
             }
           }
           break;
         case "a":
           let xPositionLeft = this.y / this.height;
           let yPositionLeft = this.x / this.width - 1;
-          let nextElementLeft = maps[0][xPositionLeft][yPositionLeft];
+          let nextElementLeft = activeLevel[xPositionLeft][yPositionLeft];
           if (
             !this.tileMap.checkWallCollision(
               this.x / this.width - 1,
@@ -66,8 +71,10 @@ class Player {
             );
             if (collision === false) {
               this.x -= this.width;
-              maps[0][this.y / this.height][this.x / this.width] = 3;
-              maps[0][this.y / this.height][this.x / this.width + 1] = 2;
+              activeLevel[this.y / this.height][this.x / this.width] =
+                PLAYER_ID;
+              activeLevel[this.y / this.height][this.x / this.width + 1] =
+                EMPTY_ID;
 
               if (nextElementLeft === 4) {
                 for (let index = 0; index < balls.length; index++) {
@@ -76,7 +83,9 @@ class Player {
                     yPositionLeft * balls[index].width === balls[index].x
                   ) {
                     balls[index].x = balls[index].x - balls[index].width;
-                    maps[0][this.y / this.height][this.x / this.width - 1] = 4;
+                    activeLevel[this.y / this.height][
+                      this.x / this.width - 1
+                    ] = 4;
                   }
                 }
               }
@@ -88,7 +97,9 @@ class Player {
                     yPositionLeft * stones[index].width === stones[index].x
                   ) {
                     stones[index].x = stones[index].x - stones[index].width;
-                    maps[0][this.y / this.height][this.x / this.width - 1] = 9;
+                    activeLevel[this.y / this.height][
+                      this.x / this.width - 1
+                    ] = 9;
                   }
                 }
               }
@@ -99,7 +110,7 @@ class Player {
         case "d":
           let xPositionRight = this.y / this.height;
           let yPositionRight = this.x / this.width + 1;
-          let nextElementRight = maps[0][xPositionRight][yPositionRight];
+          let nextElementRight = activeLevel[xPositionRight][yPositionRight];
           if (
             !this.tileMap.checkWallCollision(
               this.x / this.width + 1,
@@ -112,8 +123,10 @@ class Player {
             );
             if (collision === false) {
               this.x += this.width;
-              maps[0][this.y / this.height][this.x / this.width] = 3;
-              maps[0][this.y / this.height][this.x / this.width - 1] = 2;
+              activeLevel[this.y / this.height][this.x / this.width] =
+                PLAYER_ID;
+              activeLevel[this.y / this.height][this.x / this.width - 1] =
+                EMPTY_ID;
               if (nextElementRight === 4) {
                 for (let index = 0; index < balls.length; index++) {
                   if (
@@ -121,7 +134,9 @@ class Player {
                     yPositionRight * balls[index].width === balls[index].x
                   ) {
                     balls[index].x = balls[index].x + balls[index].width;
-                    maps[0][this.y / this.height][this.x / this.width + 1] = 4;
+                    activeLevel[this.y / this.height][
+                      this.x / this.width + 1
+                    ] = 4;
                   }
                 }
               }
@@ -133,7 +148,9 @@ class Player {
                     yPositionRight * stones[index].width === stones[index].x
                   ) {
                     stones[index].x = stones[index].x + stones[index].width;
-                    maps[0][this.y / this.height][this.x / this.width + 1] = 9;
+                    activeLevel[this.y / this.height][
+                      this.x / this.width + 1
+                    ] = 9;
                   }
                 }
               }
@@ -147,10 +164,49 @@ class Player {
   draw(context) {
     !this.exploded
       ? context.drawImage(this.player, this.x, this.y, this.width, this.height)
-      : this.gameOver();
+      : this.minimizeLife();
+  }
+
+  minimizeLife() {
+    if (this.minimized === false) {
+      this.minimized = true;
+      lives--;
+      if (lives > 0) {
+        if (localStorage.getItem("gameData") === null) {
+          let gameData = {
+            levelId: levelId,
+            lives: lives,
+            state: 4,
+          };
+          localStorage.setItem("gameData", JSON.stringify(gameData));
+          window.location.reload(false);
+        } else {
+          let previousData = JSON.parse(localStorage.getItem("gameData"));
+          let gameData = {
+            levelId: previousData.levelId,
+            lives: previousData.lives - 1,
+            state: 4,
+          };
+
+          localStorage.setItem("gameData", JSON.stringify(gameData));
+          window.location.reload(false);
+        }
+      } else {
+        levelId = 0;
+        let gameData = {
+          levelId: levelId,
+          lives: 0,
+          state: 3,
+        };
+        localStorage.setItem("gameData", JSON.stringify(gameData));
+        window.location.reload(false);
+      }
+      // this.gameOver();
+    }
   }
 
   gameOver() {
     console.log("Game Over");
+    // window.location.reload(false);
   }
 }
