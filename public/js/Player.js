@@ -1,4 +1,15 @@
 class Player {
+  /**
+   * Provides movement functionalities to the player object via event listeners,
+   * identifies the collision with the environment, game entities, player lives, etc.
+   *
+   * @param {Number} x - x position of the player
+   * @param {Number} y - y position of the player
+   * @param {Number} width - Width of the player's tile
+   * @param {Number} height - Height of the player's tile
+   * @param {Object} tileMap - Object of TileMap class
+   * @param {Boolean} exploded - Boolean value representing if player has exploded
+   */
   constructor(x, y, width, height, tileMap, exploded) {
     // Assign class parameters to the object's property
     this.x = x;
@@ -32,6 +43,8 @@ class Player {
             );
             // Move player vertically up on not detecting collision
             if (collision === false) {
+              // Play movement audio when player moves
+
               this.y -= this.height;
               activeLevel[this.y / this.height][this.x / this.width] =
                 PLAYER_ID;
@@ -84,31 +97,33 @@ class Player {
                 EMPTY_ID;
 
               // Change tile value on moving energy ball if next tile is empty on left position
-              if (nextElementLeft === 4) {
+              if (nextElementLeft === BALL_ID) {
                 for (let index = 0; index < balls.length; index++) {
                   if (
                     xPositionLeft * balls[index].height === balls[index].y &&
                     yPositionLeft * balls[index].width === balls[index].x
                   ) {
+                    let draggingAudio = new Audio("../audio/dragging.wav");
+                    draggingAudio.play();
                     balls[index].x = balls[index].x - balls[index].width;
-                    activeLevel[this.y / this.height][
-                      this.x / this.width - 1
-                    ] = 4;
+                    activeLevel[this.y / this.height][this.x / this.width - 1] =
+                      BALL_ID;
                   }
                 }
               }
 
               // Change tile value on moving stone if next tile is empty on left position
-              if (nextElementLeft === 9) {
+              if (nextElementLeft === STONE_ID) {
                 for (let index = 0; index < stones.length; index++) {
                   if (
                     xPositionLeft * stones[index].height === stones[index].y &&
                     yPositionLeft * stones[index].width === stones[index].x
                   ) {
+                    let draggingAudio = new Audio("../audio/dragging.wav");
+                    draggingAudio.play();
                     stones[index].x = stones[index].x - stones[index].width;
-                    activeLevel[this.y / this.height][
-                      this.x / this.width - 1
-                    ] = 9;
+                    activeLevel[this.y / this.height][this.x / this.width - 1] =
+                      STONE_ID;
                   }
                 }
               }
@@ -138,30 +153,32 @@ class Player {
                 EMPTY_ID;
 
               // Change tile value on moving energy ball if next tile is empty on right position
-              if (nextElementRight === 4) {
+              if (nextElementRight === BALL_ID) {
                 for (let index = 0; index < balls.length; index++) {
                   if (
                     xPositionRight * balls[index].height === balls[index].y &&
                     yPositionRight * balls[index].width === balls[index].x
                   ) {
+                    let draggingAudio = new Audio("../audio/dragging.wav");
+                    draggingAudio.play();
                     balls[index].x = balls[index].x + balls[index].width;
-                    activeLevel[this.y / this.height][
-                      this.x / this.width + 1
-                    ] = 4;
+                    activeLevel[this.y / this.height][this.x / this.width + 1] =
+                      BALL_ID;
                   }
                 }
               }
               // Change tile value on moving stone if next tile is empty on right position
-              if (nextElementRight === 9) {
+              if (nextElementRight === STONE_ID) {
                 for (let index = 0; index < stones.length; index++) {
                   if (
                     xPositionRight * stones[index].height === stones[index].y &&
                     yPositionRight * stones[index].width === stones[index].x
                   ) {
+                    let draggingAudio = new Audio("../audio/dragging.wav");
+                    draggingAudio.play();
                     stones[index].x = stones[index].x + stones[index].width;
-                    activeLevel[this.y / this.height][
-                      this.x / this.width + 1
-                    ] = 9;
+                    activeLevel[this.y / this.height][this.x / this.width + 1] =
+                      STONE_ID;
                   }
                 }
               }

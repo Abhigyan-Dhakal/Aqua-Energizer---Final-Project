@@ -75,6 +75,7 @@ const SHARK_UP_ID = 11;
 const SHARK_RIGHT_ID = 12;
 const SAVE_ID = 13;
 const BACK_ID = 14;
+const TELEPORT_ID = 15;
 
 // Source path for the images in the game
 const SAND_IMG = "../images/sand.png";
@@ -89,6 +90,9 @@ const KEY_IMG = "../images/key.png";
 const STONE_IMG = "../images/stone.png";
 const SHARK_UP_IMG = "../images/shark-up.png";
 const SHARK_RIGHT_IMG = "../images/shark-right.png";
+const SHARK_LEFT_IMG = "../images/shark-left.png";
+const SHARK_DOWN_IMG = "../images/shark-down.png";
+const TELEPORT_IMG = "../images/teleport.png";
 const SAVE_IMG = "../images/save.png";
 const BACK_IMG = "../images/back.png";
 const MENU_IMG = "../images/menu.jpg";

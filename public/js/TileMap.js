@@ -1,4 +1,15 @@
 class TileMap {
+  /**
+   * Creates a tile map as a platform for game elements in the canvas
+   * and executes during the game state. TileMap class renders all
+   * the game elemnts during the gameplay, contains functinos for creating
+   * different game instances, functions for collision and platform detection
+   * of game elements, explosions and game informations.
+   *
+   * @param {Number} tileHeight - Height of individual tile
+   * @param {Number} tileWidth - Width of individual tile
+   * @param {Object} context - Canvas 2d context
+   */
   constructor(tileHeight, tileWidth, context) {
     this.tileHeight = tileHeight;
     this.tileWidth = tileWidth;
@@ -19,6 +30,9 @@ class TileMap {
 
     this.concrete = new Image();
     this.concrete.src = CONCRETE_IMG;
+
+    this.teleport = new Image();
+    this.teleport.src = TELEPORT_IMG;
 
     this.info = new Image();
 
@@ -92,6 +106,16 @@ class TileMap {
             this.tileHeight
           );
         }
+
+        if (tile === TELEPORT_ID) {
+          this.#drawTeleport(
+            this.context,
+            column,
+            row,
+            this.tileWidth,
+            this.tileHeight
+          );
+        }
       }
     }
   }
@@ -140,6 +164,16 @@ class TileMap {
   #drawConcrete(context, column, row, width, height) {
     context.drawImage(
       this.concrete,
+      column * this.tileWidth,
+      row * this.tileHeight,
+      width,
+      height
+    );
+  }
+
+  #drawTeleport(context, column, row, width, height) {
+    context.drawImage(
+      this.teleport,
       column * this.tileWidth,
       row * this.tileHeight,
       width,
@@ -314,7 +348,10 @@ class TileMap {
   // Function to check the platform the game objects are lying over
   checkPlatform(yPosition, xPosition, impact, ball) {
     // Call explode function if falling object has impact set to true and collides with enemy/player
-    if (activeLevel[xPosition][yPosition] !== EMPTY_ID) {
+    if (
+      activeLevel[xPosition][yPosition] !== EMPTY_ID &&
+      activeLevel[xPosition][yPosition] !== TELEPORT_ID
+    ) {
       if (
         (activeLevel[xPosition][yPosition] === PLAYER_ID ||
           activeLevel[xPosition][yPosition] === CRAB_ID ||
@@ -381,6 +418,8 @@ class TileMap {
         }
       }
     } else {
+      let playerMovingAudio = new Audio("../audio/player-moving.mp3");
+      playerMovingAudio.play();
       collision = false;
       return true;
     }
@@ -388,6 +427,8 @@ class TileMap {
 
   // Function to create explosion on 3x3 tile from point of impact
   explodeObjects(yPosition, xPosition) {
+    let explodeAudio = new Audio("../audio/explode.mp3");
+    explodeAudio.play();
     // Coordinates of the tiles to be exploded
     let explosionArea = [
       { x: xPosition - 1, y: yPosition - 1 },

@@ -1,4 +1,13 @@
 class Editor {
+  /**
+   * Editor class is used to create a grid based interface for user to select
+   * the game items and draw it over the canvas along with save button for making
+   * POST API call to save the two-dimentional array of custom created map.
+   *
+   * @param {Number} tileHeight - Height of individual tile
+   * @param {Number} tileWidth - Width of individual tile
+   * @param {Object} context - Canvas 2d context
+   */
   constructor(tileHeight, tileWidth, context) {
     // Assign class parameters to the object's property
     this.tileHeight = tileHeight;

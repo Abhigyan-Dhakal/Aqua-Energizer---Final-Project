@@ -1,4 +1,19 @@
 class Ball {
+  /**
+   * Sets up properties like the impact, leveling up status, explosion
+   * status of the created ball instance.
+   *
+   * @param {Number} x - x position of the ball
+   * @param {Number} y - y position of the ball
+   * @param {Number} width - Width of the ball's tile
+   * @param {Number} height - Height of the ball's tile
+   * @param {Object} tileMap - Object of TileMap class
+   * @param {Number} column - Column of the ball in map
+   * @param {Number} row - Row of the ball in map
+   * @param {Boolean} impact - Boolean value showing impact of the ball
+   * @param {Boolean} levelingUp - Boolean value for identifying if ball went through portal
+   * @param {Boolean} exploded - Boolean value representing if ball exploded
+   */
   constructor(
     x,
     y,
@@ -23,7 +38,7 @@ class Ball {
     this.levelingUp = levelingUp;
     this.exploded = exploded;
 
-    // Creating image object and assigning source for ball
+    // Creating image object and assigning image source for ball
     this.ball = new Image();
     this.ball.src = BALL_IMG;
 
@@ -64,6 +79,9 @@ class Ball {
             activeLevel[this.y / this.height][this.x / this.width] = BALL_ID;
           }
         } else {
+          let ballPortalAudio = new Audio("../audio/ball-portal.wav");
+          ballPortalAudio.play();
+
           // Undraw image on going through portal and filter out the ball object from the array
           context.clearRect(this.x, this.y, this.width, this.height);
           activeLevel[this.y / this.height][this.x / this.width] = EMPTY_ID;
@@ -90,6 +108,9 @@ class Ball {
 
     // Set game state to level up on empty balls array and player position above portal
     if (balls.length === 0) {
+      let portalOpenAudio = new Audio("../audio/portal-open.mp3");
+      portalOpenAudio.play();
+      // activeLevel[portalCoordinate[1] - 1][portalCoordinate[0]]
       if (
         activeLevel[portalCoordinate[1] - 1][portalCoordinate[0]] === PLAYER_ID
       ) {

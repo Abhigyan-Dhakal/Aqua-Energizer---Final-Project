@@ -1,4 +1,12 @@
 class Crab {
+  /**
+   * @param {Number} x - x position of the crab
+   * @param {Number} y - y position of the crab
+   * @param {Number} width - Width of the crab's tile
+   * @param {Number} height - Height of the crab's tile
+   * @param {Object} tileMap - Object of TileMap class
+   * @param {Boolean} exploded - Boolean value representing if crab has exploded
+   */
   constructor(x, y, width, height, tileMap, exploded) {
     // Assign class parameters to the object's property
     this.x = x;

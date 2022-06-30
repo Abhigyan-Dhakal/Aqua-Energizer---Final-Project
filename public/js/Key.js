@@ -47,6 +47,9 @@ class Key {
     ) {
       // Change key tile position if not grabbed else set tile to empty
       if (!this.grabbed && !this.exploded) {
+        let keyDropAudio = new Audio("../audio/key-drop.wav");
+        keyDropAudio.play();
+
         activeLevel[this.y / this.height][this.x / this.width] = EMPTY_ID;
         activeLevel[this.y / this.height + 1][this.x / this.width] = KEY_ID;
         this.y = (this.y / this.height + 1) * this.height;
@@ -58,7 +61,10 @@ class Key {
 
   // Function to set to position to players position on grabbing the key
   checkIfGrabbed() {
-    if (this.x === player.x && this.y === player.y) {
+    if (this.x === player.x && this.y === player.y && this.grabbed === false) {
+      let doorUnlockAudio = new Audio("../audio/door-unlock.mp3");
+      doorUnlockAudio.play();
+
       this.grabbed = true;
       activeLevel[this.y / this.height][this.x / this.width] = PLAYER_ID;
     }

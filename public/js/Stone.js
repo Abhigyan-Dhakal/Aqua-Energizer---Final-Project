@@ -1,4 +1,19 @@
 class Stone {
+  /**
+   * Sets up properties like the impact, explosion
+   * status of the created stone instance.
+   *
+   * @param {Number} x - x position of the stone
+   * @param {Number} y - y position of the stone
+   * @param {Number} width - Width of the stone's tile
+   * @param {Number} height - Height of the stone's tile
+   * @param {Object} tileMap - Object of TileMap class
+   * @param {Number} column - Column of the stone in map
+   * @param {Number} row - Row of the stone in map
+   * @param {Boolean} impact - Boolean value showing impact of the stone
+   * @param {Boolean} exploded - Boolean value representing if stone exploded
+   */
+
   constructor(x, y, width, height, tileMap, column, row, impact, exploded) {
     // Assign class parameters to the object's property
     this.x = x;

@@ -13,6 +13,22 @@ function mainLoop() {
 
   // Run Home/menu state if condition matches
   if (gameState.current === 0) {
+    // Menu screen audio
+    let menuAudio = new Audio("../audio/menu.mp3");
+    if (typeof menuAudio.loop == "boolean") {
+      menuAudio.loop = true;
+    } else {
+      menuAudio.addEventListener(
+        "ended",
+        function () {
+          this.currentTime = 0;
+          this.play();
+        },
+        false
+      );
+    }
+    menuAudio.play();
+
     currentState = 0;
 
     let menu = new Image();
@@ -38,6 +54,9 @@ function mainLoop() {
 
       // Create event listeners for every button in menu to change gameState
       playBtn.addEventListener("click", () => {
+        menuAudio.pause();
+        currentTime = 0;
+
         gameState.current = 4;
       });
       editorBtn.addEventListener("click", () => {
@@ -53,6 +72,9 @@ function mainLoop() {
 
   // Run game state if condition matches
   if (gameState.current === 1) {
+    let beginsAudio = new Audio("../audio/begins.mp3");
+    beginsAudio.play();
+
     let retrievedCustomMap = JSON.parse(localStorage.getItem("customMap"));
     if (!retrievedCustomMap) {
       activeLevel = maps[levelId];
@@ -106,6 +128,22 @@ function mainLoop() {
 
   // Run level-up state if condition matches
   if (gameState.current === 2) {
+    // Level-up screen audio
+    let completedAudio = new Audio("../audio/drum-completed.mp3");
+    if (typeof completedAudio.loop == "boolean") {
+      completedAudio.loop = true;
+    } else {
+      completedAudio.addEventListener(
+        "ended",
+        function () {
+          this.currentTime = 0;
+          this.play();
+        },
+        false
+      );
+    }
+    completedAudio.play();
+
     currentState = 2;
 
     // Create image object for state background
@@ -133,8 +171,15 @@ function mainLoop() {
     };
 
     canvas.addEventListener("click", () => {
-      gameState.current = 4;
-      localStorage.setItem("gameData", JSON.stringify(newGameData));
+      completedAudio.pause();
+      // Redirect to menu if loaded map is custom
+      let retrievedCustomMap = JSON.parse(localStorage.getItem("customMap"));
+      if (!retrievedCustomMap) {
+        gameState.current = 4;
+        localStorage.setItem("gameData", JSON.stringify(newGameData));
+      } else {
+        clearLocalStorage();
+      }
     });
   }
 
@@ -143,6 +188,7 @@ function mainLoop() {
     currentState = 3;
     let gameOver = new Image();
     gameOver.src = GAME_OVER_IMG;
+
     function draw() {
       currentState === 3
         ? window.requestAnimationFrame(draw)
@@ -164,6 +210,22 @@ function mainLoop() {
 
   // Run get-ready state if condition matches
   if (gameState.current === 4) {
+    // Menu screen audio
+    let getReadyAudio = new Audio("../audio/drum-beginning.mp3");
+    if (typeof getReadyAudio.loop == "boolean") {
+      getReadyAudio.loop = true;
+    } else {
+      getReadyAudio.addEventListener(
+        "ended",
+        function () {
+          this.currentTime = 0;
+          this.play();
+        },
+        false
+      );
+    }
+    getReadyAudio.play();
+
     currentState = 4;
 
     let getReady = new Image();
@@ -183,6 +245,7 @@ function mainLoop() {
       );
 
       canvas.addEventListener("click", () => {
+        getReadyAudio.pause();
         if (retrievedData !== null) {
           let newGameData = {
             levelId: retrievedData.levelId,

@@ -1,4 +1,17 @@
 class Shark {
+  /**
+   * Sets up different attributes for the created shark object
+   * defines the movement of the shark, identification of its collision
+   * with game entities.
+   *
+   * @param {Number} x - x position of the shark
+   * @param {Number} y - y position of the shark
+   * @param {Number} width - Width of the shark's tile
+   * @param {Number} height - Height of the shark's tile
+   * @param {Object} tileMap - Object of TileMap class
+   * @param {Boolean} exploded - Boolean value representing if shark has exploded
+   * @param {Boolean} horizontal - Boolean value representing if shark moves horizontally/vertically
+   */
   constructor(x, y, width, height, tileMap, exploded, horizontal) {
     // Assign class parameters to the object's property
     this.x = x;
@@ -60,7 +73,7 @@ class Shark {
       }
 
       if (this.direction === movingDirection.left) {
-        this.shark.src = "../images/shark-left.png";
+        this.shark.src = SHARK_LEFT_IMG;
         // Check shark collision with next left tile
         if (
           !this.tileMap.checkSharkCollision(
@@ -95,7 +108,7 @@ class Shark {
       }
 
       if (this.direction === movingDirection.down) {
-        this.shark.src = "../images/shark-down.png";
+        this.shark.src = SHARK_DOWN_IMG;
         // Check shark collision with bottom tile
         if (
           !this.tileMap.checkSharkCollision(
