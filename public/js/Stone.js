@@ -1,5 +1,6 @@
 class Stone {
   constructor(x, y, width, height, tileMap, column, row, impact, exploded) {
+    // Assign class parameters to the object's property
     this.x = x;
     this.y = y;
     this.width = width;
@@ -13,6 +14,7 @@ class Stone {
     this.stone = new Image();
     this.stone.src = STONE_IMG;
 
+    // Set interval for the stone to move down vertically
     setInterval(() => {
       this.moveVertically();
     }, STONE_GRAVITY);
@@ -25,6 +27,7 @@ class Stone {
   }
 
   moveVertically() {
+    // Check platform, if empty, set the impact to true and change the vertical position of stone
     if (
       !this.tileMap.checkPlatform(
         this.x / this.width,
@@ -38,6 +41,7 @@ class Stone {
       activeLevel[this.y / this.height + 1][this.x / this.width] = STONE_ID;
       this.y = (this.y / this.height + 1) * this.height;
     } else {
+      // Set impact to false on finding a platform
       this.impact = false;
       if (this.exploded) {
         activeLevel[this.y / this.height][this.x / this.width] = EMPTY_ID;

@@ -9,7 +9,7 @@ class Shark {
     this.exploded = exploded;
     this.horizontal = horizontal;
 
-    // Creating image object and assigning source for shark
+    // Create image object and assigning source for shark
     this.shark = new Image();
 
     if (this.horizontal === true) {

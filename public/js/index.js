@@ -233,4 +233,6 @@ const showCustomLevels = (levelData) => {
   container.appendChild(levelContainer);
 };
 
-loop();
+window.addEventListener("load", () => {
+  loop();
+});

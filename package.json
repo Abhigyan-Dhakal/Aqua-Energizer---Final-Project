@@ -1,0 +1,23 @@
+{
+  "name": "aqua-energizer",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Abhigyan-Dhakal/Aqua-Energizer---Final-Project.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Abhigyan-Dhakal/Aqua-Energizer---Final-Project/issues"
+  },
+  "homepage": "https://github.com/Abhigyan-Dhakal/Aqua-Energizer---Final-Project#readme",
+  "dependencies": {
+    "express": "^4.18.1",
+    "nodemon": "^2.0.18"
+  }
+}

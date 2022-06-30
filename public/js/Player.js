@@ -1,5 +1,6 @@
 class Player {
   constructor(x, y, width, height, tileMap, exploded) {
+    // Assign class parameters to the object's property
     this.x = x;
     this.y = y;
     this.width = width;
@@ -10,12 +11,15 @@ class Player {
     this.exploded = exploded;
     this.minimized = false;
 
+    // Create image object and assigning source for player
     this.player = new Image();
     this.player.src = PLAYER_IMG;
 
+    // Create event listeners for keypress i.e. w,a,s,d
     document.addEventListener("keydown", ({ key }) => {
       switch (key) {
         case "w":
+          // Check vertical wall and object collision upwards
           if (
             !this.tileMap.checkWallCollision(
               this.x / this.width,
@@ -26,6 +30,7 @@ class Player {
               this.x / this.width,
               this.y / this.height - 1
             );
+            // Move player vertically up on not detecting collision
             if (collision === false) {
               this.y -= this.height;
               activeLevel[this.y / this.height][this.x / this.width] =
@@ -36,6 +41,7 @@ class Player {
           }
           break;
         case "s":
+          // Check vertical wall and object collision downwards
           if (
             !this.tileMap.checkWallCollision(
               this.x / this.width,
@@ -46,6 +52,7 @@ class Player {
               this.x / this.width,
               this.y / this.height + 1
             );
+            // Move player vertically down on not detecting collision
             if (collision === false) {
               this.y += this.height;
               activeLevel[this.y / this.height][this.x / this.width] =
@@ -76,6 +83,7 @@ class Player {
               activeLevel[this.y / this.height][this.x / this.width + 1] =
                 EMPTY_ID;
 
+              // Change tile value on moving energy ball if next tile is empty on left position
               if (nextElementLeft === 4) {
                 for (let index = 0; index < balls.length; index++) {
                   if (
@@ -90,6 +98,7 @@ class Player {
                 }
               }
 
+              // Change tile value on moving stone if next tile is empty on left position
               if (nextElementLeft === 9) {
                 for (let index = 0; index < stones.length; index++) {
                   if (
@@ -201,12 +210,6 @@ class Player {
         localStorage.setItem("gameData", JSON.stringify(gameData));
         window.location.reload(false);
       }
-      // this.gameOver();
     }
-  }
-
-  gameOver() {
-    console.log("Game Over");
-    // window.location.reload(false);
   }
 }

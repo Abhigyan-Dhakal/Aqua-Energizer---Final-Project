@@ -1,5 +1,6 @@
 class Editor {
   constructor(tileHeight, tileWidth, context) {
+    // Assign class parameters to the object's property
     this.tileHeight = tileHeight;
     this.tileWidth = tileWidth;
     this.context = context;

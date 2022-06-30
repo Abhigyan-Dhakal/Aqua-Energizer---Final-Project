@@ -1,5 +1,6 @@
 class Crab {
   constructor(x, y, width, height, tileMap, exploded) {
+    // Assign class parameters to the object's property
     this.x = x;
     this.y = y;
     this.width = width;
@@ -10,6 +11,7 @@ class Crab {
     this.crab = new Image();
     this.crab.src = CRAB_IMG;
 
+    // Set time interval for the crab to move
     setInterval(() => {
       !this.exploded ? this.move() : null;
     }, CRAB_SPEED);
@@ -22,6 +24,8 @@ class Crab {
   }
 
   move() {
+    // Compare the position of the player with the crab
+    // Prioritize vertial movement of the crab with respect to player first, then horizontal movement
     if (
       (player.y / player.height > this.y / this.height &&
         activeLevel[this.y / this.height + 1][this.x / this.width] ===

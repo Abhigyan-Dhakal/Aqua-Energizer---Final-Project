@@ -64,7 +64,7 @@ class Ball {
             activeLevel[this.y / this.height][this.x / this.width] = BALL_ID;
           }
         } else {
-          // Undraw image on levelling up and filter out the ball object from the array
+          // Undraw image on going through portal and filter out the ball object from the array
           context.clearRect(this.x, this.y, this.width, this.height);
           activeLevel[this.y / this.height][this.x / this.width] = EMPTY_ID;
           balls = balls.filter((item) => {
@@ -76,7 +76,9 @@ class Ball {
     this.checkLevelUp();
   }
 
+  // Function to check level up status
   checkLevelUp() {
+    // Identify coordinate of portal in map
     for (let row = 0; row < activeLevel.length; row++) {
       for (let column = 0; column < activeLevel[row].length; column++) {
         let tile = activeLevel[row][column];
@@ -86,8 +88,7 @@ class Ball {
       }
     }
 
-    console.log(portalCoordinate);
-
+    // Set game state to level up on empty balls array and player position above portal
     if (balls.length === 0) {
       if (
         activeLevel[portalCoordinate[1] - 1][portalCoordinate[0]] === PLAYER_ID
@@ -98,6 +99,8 @@ class Ball {
           lives: lives,
           state: 2,
         };
+
+        // Set current game data and state to localstorage
         localStorage.setItem("gameData", JSON.stringify(gameData));
         window.location.reload(false);
       }
