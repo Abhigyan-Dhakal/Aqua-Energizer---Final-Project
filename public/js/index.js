@@ -1,24 +1,24 @@
 resetBtn.addEventListener("click", clearLocalStorage);
 
-function clearLocalStorage() {
-  localStorage.clear();
-  window.location.reload(false);
-}
-
 function mainLoop() {
+  // Check if the gameData is empty in localStorage
   let retrievedData = JSON.parse(localStorage.getItem("gameData"));
+
+  // If not null, set the current game data with retrieved data from localStorage
   if (retrievedData !== null) {
     gameState.current = retrievedData.state;
     lives = retrievedData.lives;
     levelId = retrievedData.levelId;
   }
 
+  // Run Home/menu state if condition matches
   if (gameState.current === 0) {
     currentState = 0;
 
     let menu = new Image();
-    menu.src = "../images/menu.jpg";
+    menu.src = MENU_IMG;
 
+    // Show menu buttons
     for (let i = 0; i < 3; i++) {
       allBtn[i].style.display = "block";
     }
@@ -28,7 +28,15 @@ function mainLoop() {
         ? window.requestAnimationFrame(draw)
         : window.cancelAnimationFrame(draw);
 
-      context.drawImage(menu, 0, 0, 18 * tileWidth, 13 * tileHeight);
+      context.drawImage(
+        menu,
+        0,
+        0,
+        COL_LENGTH * tileWidth,
+        (ROW_LENGTH + 1) * tileHeight
+      );
+
+      // Create event listeners for every button in menu to change gameState
       playBtn.addEventListener("click", () => {
         gameState.current = 4;
       });
@@ -43,6 +51,7 @@ function mainLoop() {
     draw();
   }
 
+  // Run game state if condition matches
   if (gameState.current === 1) {
     let retrievedCustomMap = JSON.parse(localStorage.getItem("customMap"));
     if (!retrievedCustomMap) {
@@ -51,6 +60,7 @@ function mainLoop() {
       activeLevel = retrievedCustomMap.map;
     }
 
+    // Create new tilemap object and creating various game objects through tilemap class
     tileMap = new TileMap(tileHeight, tileWidth, context);
     tileMap.assignCanvasSize(canvas);
     player = tileMap.getPlayer();
@@ -61,9 +71,11 @@ function mainLoop() {
     shark = tileMap.getShark();
     currentState = 1;
 
+    //GameLoop to execute the game
     function gameLoop() {
       context.clearRect(0, 0, canvas.width, canvas.height);
 
+      // Iterating through objects in the array and drawing in canvas
       for (let index = 0; index < balls.length; index++) {
         balls[index].levelingUp === false ? balls[index].draw(context) : null;
       }
@@ -79,6 +91,7 @@ function mainLoop() {
       for (let index = 0; index < sharks.length; index++) {
         sharks[index].draw(context);
       }
+
       player.draw(context);
       tileMap.draw();
 
@@ -91,16 +104,25 @@ function mainLoop() {
     gameLoop();
   }
 
+  // Run level-up state if condition matches
   if (gameState.current === 2) {
     currentState = 2;
+
+    // Create image object for state background
     let levelUp = new Image();
-    levelUp.src = "../images/level-up.png";
+    levelUp.src = LEVEL_UP_IMG;
     function draw() {
       currentState === 2
         ? window.requestAnimationFrame(draw)
         : window.cancelAnimationFrame(draw);
 
-      context.drawImage(levelUp, 0, 0, 18 * tileWidth, 13 * tileHeight);
+      context.drawImage(
+        levelUp,
+        0,
+        0,
+        COL_LENGTH * tileWidth,
+        (ROW_LENGTH + 1) * tileHeight
+      );
     }
     draw();
 
@@ -116,16 +138,23 @@ function mainLoop() {
     });
   }
 
+  // Run game-over state if condition matches
   if (gameState.current === 3) {
     currentState = 3;
     let gameOver = new Image();
-    gameOver.src = "../images/game-over.png";
+    gameOver.src = GAME_OVER_IMG;
     function draw() {
       currentState === 3
         ? window.requestAnimationFrame(draw)
         : window.cancelAnimationFrame(draw);
 
-      context.drawImage(gameOver, 0, 0, 18 * tileWidth, 13 * tileHeight);
+      context.drawImage(
+        gameOver,
+        0,
+        0,
+        COL_LENGTH * tileWidth,
+        (ROW_LENGTH + 1) * tileHeight
+      );
       canvas.addEventListener("click", () => {
         clearLocalStorage();
       });
@@ -133,16 +162,26 @@ function mainLoop() {
     draw();
   }
 
+  // Run get-ready state if condition matches
   if (gameState.current === 4) {
     currentState = 4;
+
     let getReady = new Image();
-    getReady.src = "../images/get-ready.png";
+    getReady.src = GET_READY_IMG;
+
     function draw() {
       currentState === 4
         ? window.requestAnimationFrame(draw)
         : window.cancelAnimationFrame(draw);
 
-      context.drawImage(getReady, 0, 0, 18 * tileWidth, 13 * tileHeight);
+      context.drawImage(
+        getReady,
+        0,
+        0,
+        COL_LENGTH * tileWidth,
+        (ROW_LENGTH + 1) * tileHeight
+      );
+
       canvas.addEventListener("click", () => {
         if (retrievedData !== null) {
           let newGameData = {
@@ -160,8 +199,10 @@ function mainLoop() {
     draw();
   }
 
+  // Run editor state if condition matches
   if (gameState.current === 5) {
     currentState = 5;
+    // Create tileMapEditor object for editing custom map
     const tileMapEditor = new Editor(tileHeight, tileWidth, context);
 
     function editorLoop() {
@@ -173,9 +214,12 @@ function mainLoop() {
     editorLoop();
   }
 
+  // Run saved level state if condition matches
   if (gameState.current === 6) {
     let levelData = [];
     currentState = 6;
+
+    // Make API call on levels
     fetch("http://localhost:3000/levels", {
       method: "GET",
       headers: {
@@ -190,35 +234,28 @@ function mainLoop() {
   }
 }
 
-function loop() {
-  checkGameState();
-  requestAnimationFrame(loop);
-}
-
-function checkGameState() {
-  if (gameState.current !== currentState) {
-    for (let i = 0; i < 3; i++) {
-      allBtn[i].style.display = "none";
-    }
-    mainLoop();
-  }
-}
-
+// Function to show custom maps on the interface
 const showCustomLevels = (levelData) => {
   levelContainer = document.createElement("div");
   levelContainer.classList.add("levels-container");
+  // Iterate through the data and create DOM elements for every custom map
   levelData.map((data, index) => {
     date = new Date(data.createdAt);
     customLevelContainer = document.createElement("div");
     customLevelContainer.classList.add("level");
+
     customLevelHeading = document.createElement("h2");
     customLevelHeading.innerHTML = `Custom Level ${index + 1}`;
+
     customLevelDate = document.createElement("p");
     customLevelDate.innerHTML = `Created At: ${date.toDateString()}`;
+
     customLevelContainer.appendChild(customLevelHeading);
     customLevelContainer.appendChild(customLevelDate);
+
     levelContainer.appendChild(customLevelContainer);
 
+    // Click event for every DOM item to execute custom map in game state
     customLevelContainer.addEventListener("click", () => {
       levelContainer.style.display = "none";
       let customMap = {
@@ -233,6 +270,19 @@ const showCustomLevels = (levelData) => {
   container.appendChild(levelContainer);
 };
 
-window.addEventListener("load", () => {
-  loop();
-});
+// Execute function to check current gamestate and loop the function itself
+function loop() {
+  checkGameState();
+  requestAnimationFrame(loop);
+}
+
+// Check the value of current key in gameState with current state and execute loop if doesn't match
+function checkGameState() {
+  if (gameState.current !== currentState) {
+    clearBtn();
+    mainLoop();
+  }
+}
+
+// Initiating the application execution
+loop();

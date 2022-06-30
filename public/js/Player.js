@@ -136,6 +136,8 @@ class Player {
                 PLAYER_ID;
               activeLevel[this.y / this.height][this.x / this.width - 1] =
                 EMPTY_ID;
+
+              // Change tile value on moving energy ball if next tile is empty on right position
               if (nextElementRight === 4) {
                 for (let index = 0; index < balls.length; index++) {
                   if (
@@ -149,7 +151,7 @@ class Player {
                   }
                 }
               }
-
+              // Change tile value on moving stone if next tile is empty on right position
               if (nextElementRight === 9) {
                 for (let index = 0; index < stones.length; index++) {
                   if (
@@ -176,10 +178,12 @@ class Player {
       : this.minimizeLife();
   }
 
+  // Function to decrease player's lives
   minimizeLife() {
     if (this.minimized === false) {
       this.minimized = true;
       lives--;
+      // Set game state to get ready if lives is not equal to 0 and repeat same levelId
       if (lives > 0) {
         if (localStorage.getItem("gameData") === null) {
           let gameData = {
@@ -201,6 +205,7 @@ class Player {
           window.location.reload(false);
         }
       } else {
+        // Set game state to game over if lives is equal to 0 and reset levelId
         levelId = 0;
         let gameData = {
           levelId: levelId,

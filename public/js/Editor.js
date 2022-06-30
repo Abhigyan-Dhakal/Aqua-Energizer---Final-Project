@@ -107,6 +107,7 @@ class Editor {
 
     canvas.addEventListener("mousedown", (event) => {
       let coordinates = this.getCoordinates(event);
+      // Bound the row of editing items to that of editor grid
       if (coordinates[1] === 12 && coordinates[0] < 13) {
         this.gameObjects.forEach((object) => {
           if (
@@ -119,6 +120,7 @@ class Editor {
         });
       }
 
+      // Set the boundary of the editor grid tile
       if (
         coordinates[0] > 0 &&
         coordinates[0] < COL_LENGTH - 1 &&

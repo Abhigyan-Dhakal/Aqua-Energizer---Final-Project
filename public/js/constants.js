@@ -91,6 +91,10 @@ const SHARK_UP_IMG = "../images/shark-up.png";
 const SHARK_RIGHT_IMG = "../images/shark-right.png";
 const SAVE_IMG = "../images/save.png";
 const BACK_IMG = "../images/back.png";
+const MENU_IMG = "../images/menu.jpg";
+const LEVEL_UP_IMG = "../images/level-up.png";
+const GAME_OVER_IMG = "../images/game-over.png";
+const GET_READY_IMG = "../images/get-ready.png";
 
 // Item's coordinates in the editor
 const SAND_EDITOR_POS = [0, 12];

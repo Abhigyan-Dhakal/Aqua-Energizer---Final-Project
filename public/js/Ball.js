@@ -93,6 +93,7 @@ class Ball {
       if (
         activeLevel[portalCoordinate[1] - 1][portalCoordinate[0]] === PLAYER_ID
       ) {
+        activeLevel[portalCoordinate[1] - 1][portalCoordinate[0]] = 2;
         levelId++;
         let gameData = {
           levelId: levelId,
