@@ -174,7 +174,8 @@ function mainLoop() {
       completedAudio.pause();
       // Redirect to menu if loaded map is custom
       let retrievedCustomMap = JSON.parse(localStorage.getItem("customMap"));
-      if (!retrievedCustomMap) {
+      console.log(retrievedCustomMap);
+      if (!retrievedCustomMap && levelId < maps.length) {
         gameState.current = 4;
         localStorage.setItem("gameData", JSON.stringify(newGameData));
       } else {
@@ -313,13 +314,19 @@ const showCustomLevels = (levelData) => {
     customLevelDate = document.createElement("p");
     customLevelDate.innerHTML = `Created At: ${date.toDateString()}`;
 
+    backButton = document.createElement("button");
+    backButton.innerHTML = `Back`;
+    backButton.classList.add("back-btn");
+
     customLevelContainer.appendChild(customLevelHeading);
     customLevelContainer.appendChild(customLevelDate);
+    levelContainer.appendChild(backButton);
 
     levelContainer.appendChild(customLevelContainer);
 
     // Click event for every DOM item to execute custom map in game state
     customLevelContainer.addEventListener("click", () => {
+      console.log("Custom");
       levelContainer.style.display = "none";
       let customMap = {
         map: data.map,
@@ -328,6 +335,11 @@ const showCustomLevels = (levelData) => {
       localStorage.setItem("customMap", JSON.stringify(customMap));
       // localStorage.setItem("customMap", customMap);
       gameState.current = 1;
+    });
+
+    backButton.addEventListener("click", () => {
+      levelContainer.style.display = "none";
+      gameState.current = 0;
     });
   });
   container.appendChild(levelContainer);

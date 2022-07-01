@@ -39,6 +39,7 @@ let levelContainer;
 let customLevelContainer;
 let customLevelHeading;
 let customLevelDate;
+let backButton;
 let portalCoordinate = [];
 
 // Initializing empty arrays for game objects
