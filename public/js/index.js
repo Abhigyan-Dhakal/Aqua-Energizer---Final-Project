@@ -174,7 +174,6 @@ function mainLoop() {
       completedAudio.pause();
       // Redirect to menu if loaded map is custom
       let retrievedCustomMap = JSON.parse(localStorage.getItem("customMap"));
-      console.log(retrievedCustomMap);
       if (!retrievedCustomMap && levelId < maps.length) {
         gameState.current = 4;
         localStorage.setItem("gameData", JSON.stringify(newGameData));
@@ -284,7 +283,7 @@ function mainLoop() {
     currentState = 6;
 
     // Make API call on levels
-    fetch("http://localhost:3000/levels", {
+    fetch("https://Aqua-Energizer-Backend.abhigyandhakal.repl.co/levels", {
       method: "GET",
       headers: {
         "Content-type": "application/json; charset=UTF-8",

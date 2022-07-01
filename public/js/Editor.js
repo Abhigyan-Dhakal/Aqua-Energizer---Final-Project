@@ -148,7 +148,7 @@ class Editor {
           map: editedMap,
         };
 
-        fetch("http://localhost:3000/levels", {
+        fetch("https://Aqua-Energizer-Backend.abhigyandhakal.repl.co/levels", {
           method: "POST",
           headers: {
             "Content-type": "application/json; charset=UTF-8",
